@@ -4,254 +4,604 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LoyalTea Staff Interface Demo</title>
-    
-    <!-- Franken UI CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/franken-ui@2.1.0-next.16/dist/css/core.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/franken-ui@2.1.0-next.16/dist/css/utilities.min.css" />
-    
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, "Inter", sans-serif;
+            background: hsl(222.2 84% 4.9%);
+            min-height: 100vh;
+            color: hsl(210 40% 98%);
+            line-height: 1.5;
         }
-        
+
         /* Phone Frame */
         .phone-frame {
             width: 375px;
             height: 812px;
-            margin: 0 auto;
+            background: hsl(224 71.4% 4.1%);
+            border-radius: 2.5rem;
+            padding: 0.5rem;
+            margin: 1.25rem auto;
             position: relative;
+            box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+            border: 1px solid hsl(215 27.9% 16.9%);
         }
-        
+
         .phone-screen {
             width: 100%;
             height: 100%;
+            background: hsl(210 40% 98%);
+            border-radius: 2rem;
             overflow: hidden;
             position: relative;
         }
-        
-        .scan-button-large {
-            height: 250px !important;
+
+        /* Status Bar */
+        .status-bar {
+            height: 44px;
+            background: hsl(224 71.4% 4.1%);
+            color: hsl(210 40% 98%);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 1.25rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        /* Staff Interface */
+        .staff-interface {
+            padding: 1.25rem;
+            height: calc(100% - 44px);
+            overflow-y: auto;
+        }
+
+        .staff-header {
+            text-align: center;
+            margin-bottom: 1.25rem;
+            background: hsl(0 0% 100%);
+            padding: 1.25rem;
+            border-radius: 1rem;
+            border: 1px solid hsl(214.3 31.8% 91.4%);
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+        }
+
+        .staff-header h2 {
+            color: hsl(222.2 84% 4.9%);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .staff-header p {
+            color: hsl(215.4 16.3% 46.9%);
+            font-size: 0.875rem;
+        }
+
+        .badge {
+            display: inline-block;
+            background: hsl(142.1 76.2% 36.3%);
+            color: hsl(0 0% 100%);
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-top: 0.5rem;
+        }
+
+        /* Large Scan Button */
+        .scan-button {
+            width: 100%;
+            height: 15rem;
+            background: hsl(222.2 84% 4.9%);
+            color: hsl(210 40% 98%);
+            border: 1px solid hsl(215 27.9% 16.9%);
+            border-radius: 1rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 1.25rem 0;
+            cursor: pointer;
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
-            gap: 1rem;
+            justify-content: center;
+            gap: 0.75rem;
+            transition: all 0.2s;
+            box-shadow: 0 2px 4px 0 rgb(0 0 0 / 0.1);
         }
-        
+
+        .scan-button:hover {
+            background: hsl(215 27.9% 16.9%);
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+
+        .scan-icon {
+            font-size: 3rem;
+        }
+
+        /* Quick Stats */
+        .quick-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .stat-card {
+            background: hsl(0 0% 100%);
+            padding: 1rem;
+            border-radius: 0.75rem;
+            border: 1px solid hsl(214.3 31.8% 91.4%);
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: hsl(222.2 84% 4.9%);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: hsl(215.4 16.3% 46.9%);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Recent Activity */
+        .activity-card {
+            background: hsl(0 0% 100%);
+            border: 1px solid hsl(214.3 31.8% 91.4%);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+        }
+
+        .activity-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: hsl(222.2 84% 4.9%);
+            margin-bottom: 0.75rem;
+        }
+
         .activity-item {
             display: flex;
             align-items: center;
             padding: 0.75rem 0;
+            border-bottom: 1px solid hsl(214.3 31.8% 91.4%);
         }
-        
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
         .activity-avatar {
             width: 2.5rem;
             height: 2.5rem;
             border-radius: 50%;
+            background: hsl(222.2 84% 4.9%);
+            color: hsl(210 40% 98%);
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 600;
-            margin-right: 0.75rem;
             font-size: 0.875rem;
+            margin-right: 0.75rem;
+        }
+
+        .activity-info {
+            flex: 1;
+        }
+
+        .activity-name {
+            font-weight: 600;
+            color: hsl(222.2 84% 4.9%);
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .activity-action {
+            color: hsl(215.4 16.3% 46.9%);
+            font-size: 0.75rem;
+        }
+
+        .activity-time {
+            color: hsl(215.4 16.3% 46.9%);
+            font-size: 0.75rem;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-top: 1.25rem;
+        }
+
+        .action-btn {
+            background: hsl(210 40% 96%);
+            color: hsl(222.2 84% 4.9%);
+            border: 1px solid hsl(214.3 31.8% 91.4%);
+            padding: 0.75rem;
+            border-radius: 0.375rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            height: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .action-btn:hover {
+            background: hsl(210 40% 92%);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: hsl(0 0% 100%);
+            border-radius: 1rem;
+            padding: 2rem;
+            max-width: 24rem;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+        }
+
+        .modal-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: hsl(222.2 84% 4.9%);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .alert-success {
+            background: hsl(143 85% 96%);
+            color: hsl(140 100% 27%);
+            border: 1px solid hsl(141 53.7% 83.1%);
+        }
+
+        .alert-warning {
+            background: hsl(48 96% 89%);
+            color: hsl(25 95% 53%);
+            border: 1px solid hsl(48 96% 76%);
+        }
+
+        .customer-info {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .customer-name {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: hsl(222.2 84% 4.9%);
+            margin-bottom: 0.5rem;
+        }
+
+        .customer-details {
+            font-size: 0.75rem;
+            color: hsl(215.4 16.3% 46.9%);
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-buttons {
+            display: grid;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .btn-primary {
+            background: hsl(222.2 84% 4.9%);
+            color: hsl(210 40% 98%);
+            border: 1px solid hsl(215 27.9% 16.9%);
+            padding: 0.75rem 1rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            height: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-primary:hover {
+            background: hsl(215 27.9% 16.9%);
+        }
+
+        .btn-secondary {
+            background: hsl(0 0% 100%);
+            color: hsl(222.2 84% 4.9%);
+            border: 1px solid hsl(214.3 31.8% 91.4%);
+            padding: 0.75rem 1rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            height: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-secondary:hover {
+            background: hsl(210 40% 96%);
+        }
+
+        .modal-close {
+            background: hsl(210 40% 96%);
+            color: hsl(222.2 84% 4.9%);
+            border: 1px solid hsl(214.3 31.8% 91.4%);
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+
+        /* Navigation Links */
+        .nav-links {
+            position: fixed;
+            top: 1.25rem;
+            left: 1.25rem;
+            background: hsl(224 71.4% 4.1%);
+            padding: 1rem;
+            border-radius: 0.75rem;
+            border: 1px solid hsl(215 27.9% 16.9%);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+        }
+
+        .nav-btn {
+            display: block;
+            background: hsl(215 27.9% 16.9%);
+            color: hsl(210 40% 98%);
+            text-decoration: none;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.375rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .nav-btn:last-child {
+            margin-bottom: 0;
+        }
+
+        .nav-btn:hover {
+            background: hsl(217.2 32.6% 17.5%);
+        }
+
+        /* Technical Notes */
+        .tech-notes {
+            position: fixed;
+            bottom: 1.25rem;
+            right: 1.25rem;
+            background: hsl(224 71.4% 4.1%);
+            color: hsl(210 40% 98%);
+            padding: 1.25rem;
+            border-radius: 1rem;
+            max-width: 25rem;
+            font-size: 0.75rem;
+            line-height: 1.5;
+            border: 1px solid hsl(215 27.9% 16.9%);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+        }
+
+        .tech-notes h4 {
+            color: hsl(210 40% 98%);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links,
+            .tech-notes {
+                position: relative;
+                margin: 1.25rem;
+                max-width: none;
+            }
         }
     </style>
 </head>
-<body class="uk-background-muted">
+<body>
     <!-- Phone Frame -->
-    <div class="uk-flex uk-flex-center uk-margin-large">
-        <div class="phone-frame uk-card uk-card-secondary uk-border-rounded uk-padding-small uk-box-shadow-large">
-            <div class="phone-screen uk-card uk-card-default uk-border-rounded">
-                <!-- Status Bar -->
-                <div class="uk-background-secondary uk-light uk-flex uk-flex-between uk-flex-middle uk-padding-small uk-text-small uk-text-bold">
-                    <span>9:41</span>
-                    <span>📶 📶 📶 🔋</span>
-                </div>
+    <div class="phone-frame">
+        <div class="phone-screen">
+            <!-- Status Bar -->
+            <div class="status-bar">
+                <span>9:41</span>
+                <span>📶 📶 📶 🔋</span>
+            </div>
 
-                <div class="uk-height-1-1 uk-overflow-auto uk-padding">
-                    <!-- Staff Header -->
-                    <div class="uk-card uk-card-default uk-card-body uk-text-center uk-margin-bottom">
-                        <h2 class="uk-card-title uk-margin-small-bottom">Welcome back, Ahmad!</h2>
-                        <p class="uk-text-muted">Mario's Pizza Staff Portal</p>
-                        <div class="uk-flex uk-flex-center uk-margin-small-top">
-                            <span class="uk-badge uk-badge-success">Manager</span>
+            <div class="staff-interface">
+                <!-- Staff Header -->
+                <div class="staff-header">
+                    <h2>Welcome back, Ahmad!</h2>
+                    <p>Mario's Pizza Staff Portal</p>
+                    <div class="badge">Manager</div>
+                </div>
+                
+                <!-- Large Scan Button -->
+                <button class="scan-button" onclick="showScanResult()">
+                    <div class="scan-icon">📷</div>
+                    <div>SCAN</div>
+                    <div>CUSTOMER QR CODE</div>
+                </button>
+                
+                <!-- Quick Stats -->
+                <div class="quick-stats">
+                    <div class="stat-card">
+                        <div class="stat-value">47</div>
+                        <div class="stat-label">Scans Today</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">RM 1,245</div>
+                        <div class="stat-label">Sales Today</div>
+                    </div>
+                </div>
+                
+                <!-- Recent Activity -->
+                <div class="activity-card">
+                    <div class="activity-title">Recent Activity</div>
+                    
+                    <div class="activity-item">
+                        <div class="activity-avatar">SL</div>
+                        <div class="activity-info">
+                            <div class="activity-name">Sarah Lim</div>
+                            <div class="activity-action">+25 points earned</div>
                         </div>
+                        <div class="activity-time">5m</div>
                     </div>
                     
-                    <!-- Large Scan Button -->
-                    <div class="uk-margin-bottom">
-                        <button class="uk-button uk-button-primary uk-button-large uk-width-1-1 scan-button-large" onclick="showScanResult()">
-                            <span style="font-size: 3rem;">📷</span>
-                            <span class="uk-text-large">SCAN</span>
-                            <span>CUSTOMER QR CODE</span>
-                        </button>
+                    <div class="activity-item">
+                        <div class="activity-avatar">MK</div>
+                        <div class="activity-info">
+                            <div class="activity-name">Mike Kumar</div>
+                            <div class="activity-action">+1 stamp added</div>
+                        </div>
+                        <div class="activity-time">12m</div>
                     </div>
                     
-                    <!-- Quick Stats -->
-                    <div class="uk-grid-small uk-child-width-1-2" uk-grid>
-                        <div>
-                            <div class="uk-card uk-card-default uk-card-body uk-text-center">
-                                <div class="uk-text-large">47</div>
-                                <div class="uk-text-small uk-text-muted">Scans Today</div>
-                            </div>
+                    <div class="activity-item">
+                        <div class="activity-avatar">LC</div>
+                        <div class="activity-info">
+                            <div class="activity-name">Lisa Chen</div>
+                            <div class="activity-action">Gold member visit</div>
                         </div>
-                        <div>
-                            <div class="uk-card uk-card-default uk-card-body uk-text-center">
-                                <div class="uk-text-large">RM 1,245</div>
-                                <div class="uk-text-small uk-text-muted">Sales Today</div>
-                            </div>
-                        </div>
+                        <div class="activity-time">1h</div>
                     </div>
-                    
-                    <!-- Recent Activity -->
-                    <div class="uk-card uk-card-default uk-card-body uk-margin-top">
-                        <h3 class="uk-card-title uk-text-small">Recent Activity</h3>
-                        
-                        <div class="activity-item uk-border-bottom">
-                            <div class="activity-avatar uk-background-primary uk-light">SL</div>
-                            <div class="uk-flex-1">
-                                <div class="uk-text-bold uk-text-small">Sarah Lim</div>
-                                <div class="uk-text-small uk-text-muted">+25 points earned</div>
-                            </div>
-                            <div class="uk-text-small uk-text-muted">5m</div>
-                        </div>
-                        
-                        <div class="activity-item uk-border-bottom">
-                            <div class="activity-avatar uk-background-secondary uk-light">MK</div>
-                            <div class="uk-flex-1">
-                                <div class="uk-text-bold uk-text-small">Mike Kumar</div>
-                                <div class="uk-text-small uk-text-muted">+1 stamp added</div>
-                            </div>
-                            <div class="uk-text-small uk-text-muted">12m</div>
-                        </div>
-                        
-                        <div class="activity-item">
-                            <div class="activity-avatar uk-background-secondary uk-light">LC</div>
-                            <div class="uk-flex-1">
-                                <div class="uk-text-bold uk-text-small">Lisa Chen</div>
-                                <div class="uk-text-small uk-text-muted">Gold member visit</div>
-                            </div>
-                            <div class="uk-text-small uk-text-muted">1h</div>
-                        </div>
-                    </div>
-                    
-                    <!-- Quick Actions -->
-                    <div class="uk-margin-top">
-                        <div class="uk-grid-small uk-child-width-1-2" uk-grid>
-                            <div>
-                                <button class="uk-button uk-button-default uk-button-small uk-width-1-1" onclick="showFeatureDemo('Manual Entry')">
-                                    ✏️ Manual Entry
-                                </button>
-                            </div>
-                            <div>
-                                <button class="uk-button uk-button-default uk-button-small uk-width-1-1" onclick="showFeatureDemo('Daily Report')">
-                                    📊 Daily Report
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                </div>
+                
+                <!-- Quick Actions -->
+                <div class="quick-actions">
+                    <button class="action-btn" onclick="showFeatureDemo('Manual Entry')">
+                        ✏️ Manual Entry
+                    </button>
+                    <button class="action-btn" onclick="showFeatureDemo('Daily Report')">
+                        📊 Daily Report
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Transaction Modal -->
-    <div id="transactionModal" class="uk-modal">
-        <div class="uk-modal-dialog">
-            <div class="uk-modal-header">
-                <h2 class="uk-modal-title">QR Code Scanned Successfully!</h2>
+    <div id="transactionModal" class="modal">
+        <div class="modal-content">
+            <h2 class="modal-title">QR Code Scanned Successfully!</h2>
+            
+            <div class="alert alert-success">
+                <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">📱</div>
+                Customer Found!
             </div>
-            <div class="uk-modal-body">
-                <div class="uk-alert uk-alert-success uk-text-center">
-                    <span class="uk-text-large">📱</span> Customer Found!
-                </div>
-                
-                <div class="uk-card uk-card-default uk-card-body">
-                    <div class="uk-text-center uk-margin-bottom">
-                        <div class="uk-text-bold uk-text-large">👤 John Doe</div>
-                        <div class="uk-text-muted">Silver Member</div>
-                        <div class="uk-text-small uk-text-muted">📧 john@example.com • 📱 +60 12-345 6789</div>
-                    </div>
-                    
-                    <div class="uk-alert uk-alert-primary uk-text-center">
-                        <strong>Current Progress:</strong> 7 of 10 stamps<br>
-                        <small>3 more stamps needed for free coffee!</small>
-                    </div>
-                    
-                    <div class="uk-grid-small uk-child-width-1-1" uk-grid>
-                        <div>
-                            <button class="uk-button uk-button-primary uk-width-1-1" onclick="addStamp()">
-                                ⭐ ADD STAMP
-                            </button>
-                        </div>
-                        <div>
-                            <button class="uk-button uk-button-default uk-width-1-1" onclick="showFeatureDemo('Customer History')">
-                                📋 VIEW HISTORY
-                            </button>
-                        </div>
-                        <div>
-                            <button class="uk-button uk-button-secondary uk-width-1-1" onclick="showFeatureDemo('Manual Override')">
-                                🔧 MANUAL OVERRIDE
-                            </button>
-                        </div>
-                    </div>
-                </div>
+            
+            <div class="customer-info">
+                <div class="customer-name">👤 John Doe</div>
+                <div style="color: hsl(215.4 16.3% 46.9%); font-size: 0.875rem; margin-bottom: 0.5rem;">Silver Member</div>
+                <div class="customer-details">📧 john@example.com • 📱 +60 12-345 6789</div>
             </div>
-            <div class="uk-modal-footer uk-text-right">
-                <button class="uk-button uk-button-default uk-modal-close" type="button">Close</button>
+            
+            <div class="alert alert-warning" style="font-size: 0.875rem;">
+                <strong>Current Progress:</strong> 7 of 10 stamps<br>
+                3 more stamps needed for free coffee!
             </div>
+            
+            <div class="modal-buttons">
+                <button class="btn-primary" onclick="addStamp()">
+                    ⭐ ADD STAMP
+                </button>
+                <button class="btn-secondary" onclick="showFeatureDemo('Customer History')">
+                    📋 VIEW HISTORY
+                </button>
+                <button class="btn-secondary" onclick="showFeatureDemo('Manual Override')">
+                    🔧 MANUAL OVERRIDE
+                </button>
+            </div>
+            
+            <button class="modal-close" onclick="closeModal('transactionModal')">Close</button>
         </div>
     </div>
 
     <!-- Success Modal -->
-    <div id="successModal" class="uk-modal">
-        <div class="uk-modal-dialog">
-            <div class="uk-modal-header">
-                <h2 class="uk-modal-title">Transaction Complete! 🎉</h2>
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <h2 class="modal-title">Transaction Complete! 🎉</h2>
+            
+            <div class="alert alert-success">
+                <div style="font-size: 2rem; margin-bottom: 0.5rem;">✅</div>
+                <h3 style="margin-bottom: 0.5rem;">Stamp Added Successfully!</h3>
+                <p style="margin: 0;">Customer wallet updated in real-time</p>
             </div>
-            <div class="uk-modal-body">
-                <div class="uk-alert uk-alert-success uk-text-center">
-                    <div class="uk-text-large uk-margin-bottom">✅</div>
-                    <h3>Stamp Added Successfully!</h3>
-                    <p class="uk-margin-remove">Customer wallet updated in real-time</p>
+            
+            <div class="customer-info">
+                <div class="customer-name">John Doe</div>
+                <div style="color: hsl(215.4 16.3% 46.9%); margin-bottom: 1rem;">New Progress: 8 of 10 stamps</div>
+                
+                <div class="alert alert-warning">
+                    🎯 Just 2 more stamps for FREE coffee!
                 </div>
                 
-                <div class="uk-card uk-card-default uk-card-body">
-                    <div class="uk-text-center">
-                        <div class="uk-text-bold">John Doe</div>
-                        <div class="uk-text-muted uk-margin-small-bottom">New Progress: 8 of 10 stamps</div>
-                        
-                        <div class="uk-alert uk-alert-warning">
-                            🎯 Just 2 more stamps for FREE coffee!
-                        </div>
-                        
-                        <div class="uk-text-small uk-text-muted uk-margin-top">
-                            📲 Push notification sent<br>
-                            ⚡ Updated in real-time<br>
-                            📊 Transaction logged
-                        </div>
-                    </div>
+                <div style="font-size: 0.75rem; color: hsl(215.4 16.3% 46.9%); margin-top: 1rem;">
+                    📲 Push notification sent<br>
+                    ⚡ Updated in real-time<br>
+                    📊 Transaction logged
                 </div>
             </div>
-            <div class="uk-modal-footer uk-text-right">
-                <button class="uk-button uk-button-primary uk-modal-close" type="button">Continue</button>
-            </div>
+            
+            <button class="btn-primary" onclick="closeModal('successModal')">Continue</button>
         </div>
     </div>
 
     <!-- Navigation Links -->
-    <div class="uk-card uk-card-secondary uk-card-body uk-light uk-position-fixed uk-position-top-left uk-margin-left uk-margin-top">
-        <div class="uk-grid-small uk-child-width-1-1" uk-grid>
-            <div><a href="index.html" class="uk-button uk-button-small uk-button-default uk-width-1-1">🔙 Customer Journey</a></div>
-            <div><a href="business-dashboard.html" class="uk-button uk-button-small uk-button-default uk-width-1-1">💼 Business Dashboard</a></div>
-            <div><a href="card-types-demo.html" class="uk-button uk-button-small uk-button-default uk-width-1-1">🎯 8 Card Types</a></div>
-        </div>
+    <div class="nav-links">
+        <a href="index.html" class="nav-btn">🔙 Customer Journey</a>
+        <a href="business-dashboard.html" class="nav-btn">💼 Business Dashboard</a>
+        <a href="card-types-demo.html" class="nav-btn">🎯 8 Card Types</a>
     </div>
 
     <!-- Technical Notes -->
-    <div class="uk-card uk-card-secondary uk-card-body uk-light uk-position-fixed uk-position-bottom-right uk-margin-right uk-margin-bottom uk-width-large">
-        <h4 class="uk-card-title">📱 Staff Interface Features</h4>
-        <div class="uk-text-small">
+    <div class="tech-notes">
+        <h4>📱 Staff Interface Features</h4>
+        <div>
             <strong>Real Staff Implementation:</strong><br>
             • QR code camera integration<br>
             • Real-time customer lookup<br>
@@ -262,31 +612,31 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/franken-ui@2.1.0-next.16/dist/js/core.min.js"></script>
     <script>
         function showScanResult() {
-            UIkit.modal('#transactionModal').show();
+            document.getElementById('transactionModal').classList.add('show');
         }
 
         function addStamp() {
-            UIkit.modal('#transactionModal').hide();
+            closeModal('transactionModal');
             setTimeout(() => {
-                UIkit.modal('#successModal').show();
-            }, 500);
+                document.getElementById('successModal').classList.add('show');
+            }, 300);
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('show');
         }
 
         function showFeatureDemo(featureName) {
-            UIkit.notification({
-                message: `Opening ${featureName} interface...`,
-                status: 'primary',
-                pos: 'top-center',
-                timeout: 3000
-            });
+            alert(`Opening ${featureName} interface...`);
         }
 
-        // Initialize UIkit
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('Staff interface loaded with Franken UI');
+        // Close modals when clicking outside
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal')) {
+                e.target.classList.remove('show');
+            }
         });
     </script>
 </body>

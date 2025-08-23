@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LoyalTea Business Dashboard Demo</title>
+    
+    <!-- Franken UI CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/franken-ui@2.1.0-next.16/dist/css/core.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/franken-ui@2.1.0-next.16/dist/css/utilities.min.css" />
+    
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, "Inter", sans-serif;
+        }
+        
+        .dashboard-section {
+            display: none;
+        }
+        
+        .dashboard-section.active {
+            display: block;
+        }
+        
+        .chart-placeholder {
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+            color: #666;
+        }
+        
+        .customer-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin-right: 1rem;
+        }
+    </style>
+</head>
+<body class="uk-background-muted">
+    <!-- Header -->
+    <div class="uk-background-secondary uk-light uk-padding-large uk-text-center">
+        <h1 class="uk-heading-medium uk-margin-remove-bottom">LoyalTea Business Dashboard</h1>
+        <p class="uk-text-large uk-margin-small-top">Complete business management portal for loyalty programs</p>
+        
+        <div class="uk-card uk-card-primary uk-card-body uk-border-rounded uk-margin-top uk-display-inline-block">
+            <div class="uk-grid-small uk-child-width-auto" uk-grid>
+                <div>
+                    <div class="uk-text-bold">Mario's Pizza</div>
+                    <div class="uk-text-small">ID: MP-2024-001</div>
+                </div>
+                <div>
+                    <div class="uk-text-bold">2,847 Members</div>
+                    <div class="uk-text-small">Active Program</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="uk-background-default uk-box-shadow-small" uk-sticky>
+        <div class="uk-container uk-container-large">
+            <div class="uk-flex uk-flex-wrap uk-padding-small" style="gap: 0.5rem;">
+                <button class="uk-button uk-button-primary demo-tab active" onclick="showSection('overview')">📊 Overview</button>
+                <button class="uk-button uk-button-default demo-tab" onclick="showSection('customers')">👥 Customers</button>
+                <button class="uk-button uk-button-default demo-tab" onclick="showSection('transactions')">💳 Transactions</button>
+                <button class="uk-button uk-button-default demo-tab" onclick="showSection('program')">⚙️ Program Setup</button>
+                <button class="uk-button uk-button-default demo-tab" onclick="showSection('staff')">👨‍💼 Staff Management</button>
+                <button class="uk-button uk-button-default demo-tab" onclick="showSection('analytics')">📈 Analytics</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="uk-container uk-container-large uk-padding-large">
+        <!-- Overview Section -->
+        <div id="overview" class="dashboard-section active">
+            <div class="uk-grid-match uk-child-width-1-4@l uk-child-width-1-2@m" uk-grid>
+                <!-- Stats Cards -->
+                <div>
+                    <div class="uk-card uk-card-default uk-card-body uk-text-center">
+                        <div class="uk-text-large">📊</div>
+                        <div class="uk-heading-small uk-margin-remove uk-text-primary">2,847</div>
+                        <div class="uk-text-muted uk-text-uppercase uk-text-small">Total Members</div>
+                        <div class="uk-flex uk-flex-center uk-margin-small-top">
+                            <span class="uk-text-success uk-text-small">↗ +12.5%</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="uk-card uk-card-default uk-card-body uk-text-center">
+                        <div class="uk-text-large">💰</div>
+                        <div class="uk-heading-small uk-margin-remove uk-text-primary">RM 89,420</div>
+                        <div class="uk-text-muted uk-text-uppercase uk-text-small">Monthly Revenue</div>
+                        <div class="uk-flex uk-flex-center uk-margin-small-top">
+                            <span class="uk-text-success uk-text-small">↗ +8.3%</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="uk-card uk-card-default uk-card-body uk-text-center">
+                        <div class="uk-text-large">🏆</div>
+                        <div class="uk-heading-small uk-margin-remove uk-text-primary">1,293</div>
+                        <div class="uk-text-muted uk-text-uppercase uk-text-small">Rewards Claimed</div>
+                        <div class="uk-flex uk-flex-center uk-margin-small-top">
+                            <span class="uk-text-success uk-text-small">↗ +15.7%</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="uk-card uk-card-default uk-card-body uk-text-center">
+                        <div class="uk-text-large">📱</div>
+                        <div class="uk-heading-small uk-margin-remove uk-text-primary">4.8/5</div>
+                        <div class="uk-text-muted uk-text-uppercase uk-text-small">App Rating</div>
+                        <div class="uk-flex uk-flex-center uk-margin-small-top">
+                            <span class="uk-text-success uk-text-small">↗ +0.2%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="uk-grid-match uk-child-width-1-2@m uk-margin-large-top" uk-grid>
+                <!-- Chart Card -->
+                <div>
+                    <div class="uk-card uk-card-default uk-card-body">
+                        <h3 class="uk-card-title uk-flex uk-flex-between uk-flex-middle">
+                            Revenue Trends
+                            <span class="uk-text-large">📈</span>
+                        </h3>
+                        <div class="chart-placeholder uk-background-muted uk-border-rounded">
+                            📊 Revenue chart would display here<br>
+                            <small>Interactive chart showing monthly trends</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Recent Activity -->
+                <div>
+                    <div class="uk-card uk-card-default uk-card-body">
+                        <h3 class="uk-card-title uk-flex uk-flex-between uk-flex-middle">
+                            Recent Members
+                            <span class="uk-text-large">👥</span>
+                        </h3>
+                        <div class="uk-height-small uk-overflow-auto">
+                            <div class="uk-flex uk-flex-middle uk-padding-small uk-border-bottom">
+                                <div class="customer-avatar uk-background-primary uk-light">SL</div>
+                                <div class="uk-flex-1">
+                                    <div class="uk-text-bold">Sarah Lim</div>
+                                    <div class="uk-text-small uk-text-muted">Gold Member • Joined 2 days ago</div>
+                                </div>
+                                <div class="uk-text-success uk-text-small">+25 pts</div>
+                            </div>
+                            
+                            <div class="uk-flex uk-flex-middle uk-padding-small uk-border-bottom">
+                                <div class="customer-avatar uk-background-secondary uk-light">MK</div>
+                                <div class="uk-flex-1">
+                                    <div class="uk-text-bold">Mike Kumar</div>
+                                    <div class="uk-text-small uk-text-muted">Silver Member • Joined 1 week ago</div>
+                                </div>
+                                <div class="uk-text-success uk-text-small">New</div>
+                            </div>
+                            
+                            <div class="uk-flex uk-flex-middle uk-padding-small">
+                                <div class="customer-avatar uk-background-secondary uk-light">JD</div>
+                                <div class="uk-flex-1">
+                                    <div class="uk-text-bold">Jessica Doe</div>
+                                    <div class="uk-text-small uk-text-muted">Bronze Member • Joined 2 weeks ago</div>
+                                </div>
+                                <div class="uk-text-muted uk-text-small">Active</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="uk-margin-large-top">
+                <h3 class="uk-heading-small">Quick Actions</h3>
+                <div class="uk-grid-small uk-child-width-1-4@l uk-child-width-1-2@m" uk-grid>
+                    <div>
+                        <button class="uk-button uk-button-primary uk-width-1-1" onclick="showFeatureDemo('New Campaign Creator')">
+                            🎯 Create Campaign
+                        </button>
+                    </div>
+                    <div>
+                        <button class="uk-button uk-button-default uk-width-1-1" onclick="showFeatureDemo('Member Import Tool')">
+                            📥 Import Members
+                        </button>
+                    </div>
+                    <div>
+                        <button class="uk-button uk-button-default uk-width-1-1" onclick="showFeatureDemo('Analytics Dashboard')">
+                            📊 View Analytics
+                        </button>
+                    </div>
+                    <div>
+                        <button class="uk-button uk-button-default uk-width-1-1" onclick="showFeatureDemo('Settings Panel')">
+                            ⚙️ Settings
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Customers Section -->
+        <div id="customers" class="dashboard-section">
+            <div class="uk-flex uk-flex-between uk-flex-middle uk-margin-bottom">
+                <h2 class="uk-heading-small uk-margin-remove">Customer Management</h2>
+                <div class="uk-flex" style="gap: 0.5rem;">
+                    <button class="uk-button uk-button-primary" onclick="showFeatureDemo('Add New Customer')">Add Customer</button>
+                    <button class="uk-button uk-button-default" onclick="showFeatureDemo('Export Customers')">Export</button>
+                </div>
+            </div>
+
+            <!-- Customer Search -->
+            <div class="uk-card uk-card-default uk-card-body uk-margin-bottom">
+                <div class="uk-grid-small uk-child-width-expand@s" uk-grid>
+                    <div>
+                        <input class="uk-input" type="text" placeholder="Search customers..." />
+                    </div>
+                    <div class="uk-width-auto">
+                        <select class="uk-select">
+                            <option>All Tiers</option>
+                            <option>Gold</option>
+                            <option>Silver</option>
+                            <option>Bronze</option>
+                        </select>
+                    </div>
+                    <div class="uk-width-auto">
+                        <button class="uk-button uk-button-primary">Search</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Customers Table -->
+            <div class="uk-card uk-card-default">
+                <div class="uk-overflow-auto">
+                    <table class="uk-table uk-table-hover uk-table-divider">
+                        <thead>
+                            <tr>
+                                <th>Customer</th>
+                                <th>Tier</th>
+                                <th>Points/Stamps</th>
+                                <th>Last Visit</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="uk-flex uk-flex-middle">
+                                        <div class="customer-avatar uk-background-primary uk-light">SL</div>
+                                        <div>
+                                            <div class="uk-text-bold">Sarah Lim</div>
+                                            <div class="uk-text-small uk-text-muted">sarah@email.com</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="uk-badge uk-badge-warning">Gold</span></td>
+                                <td>2,450 points</td>
+                                <td>2 hours ago</td>
+                                <td>
+                                    <button class="uk-button uk-button-small uk-button-default" onclick="showFeatureDemo('Customer Details')">View</button>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>
+                                    <div class="uk-flex uk-flex-middle">
+                                        <div class="customer-avatar uk-background-secondary uk-light">JD</div>
+                                        <div>
+                                            <div class="uk-text-bold">John Doe</div>
+                                            <div class="uk-text-small uk-text-muted">john@email.com</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="uk-badge">Silver</span></td>
+                                <td>7/10 stamps</td>
+                                <td>1 day ago</td>
+                                <td>
+                                    <button class="uk-button uk-button-small uk-button-default" onclick="showFeatureDemo('Customer Details')">View</button>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>
+                                    <div class="uk-flex uk-flex-middle">
+                                        <div class="customer-avatar uk-background-secondary uk-light">MK</div>
+                                        <div>
+                                            <div class="uk-text-bold">Mike Kumar</div>
+                                            <div class="uk-text-small uk-text-muted">mike@email.com</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="uk-badge uk-badge-danger">Bronze</span></td>
+                                <td>850 points</td>
+                                <td>3 days ago</td>
+                                <td>
+                                    <button class="uk-button uk-button-small uk-button-default" onclick="showFeatureDemo('Customer Details')">View</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Transactions Section -->
+        <div id="transactions" class="dashboard-section">
+            <div class="uk-flex uk-flex-between uk-flex-middle uk-margin-bottom">
+                <h2 class="uk-heading-small uk-margin-remove">Transaction History</h2>
+                <button class="uk-button uk-button-default" onclick="showFeatureDemo('Export Transactions')">Export Report</button>
+            </div>
+
+            <!-- Transaction Filters -->
+            <div class="uk-card uk-card-default uk-card-body uk-margin-bottom">
+                <div class="uk-grid-small uk-child-width-expand@s" uk-grid>
+                    <div>
+                        <label class="uk-form-label">Date Range</label>
+                        <input class="uk-input" type="date" value="2024-01-01" />
+                    </div>
+                    <div>
+                        <label class="uk-form-label">To</label>
+                        <input class="uk-input" type="date" value="2024-01-31" />
+                    </div>
+                    <div>
+                        <label class="uk-form-label">Type</label>
+                        <select class="uk-select">
+                            <option>All Types</option>
+                            <option>Points Earned</option>
+                            <option>Points Redeemed</option>
+                            <option>Stamps Added</option>
+                        </select>
+                    </div>
+                    <div class="uk-flex uk-flex-bottom">
+                        <button class="uk-button uk-button-primary">Filter</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Transactions Table -->
+            <div class="uk-card uk-card-default">
+                <div class="uk-overflow-auto">
+                    <table class="uk-table uk-table-hover uk-table-divider">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Customer</th>
+                                <th>Type</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>2024-01-15 14:30</td>
+                                <td>Sarah Lim</td>
+                                <td>Points Earned</td>
+                                <td>+25 points</td>
+                                <td><span class="uk-text-success">✓ Completed</span></td>
+                            </tr>
+                            
+                            <tr>
+                                <td>2024-01-15 12:15</td>
+                                <td>John Doe</td>
+                                <td>Stamp Added</td>
+                                <td>+1 stamp</td>
+                                <td><span class="uk-text-success">✓ Completed</span></td>
+                            </tr>
+                            
+                            <tr>
+                                <td>2024-01-14 18:45</td>
+                                <td>Mike Kumar</td>
+                                <td>Points Redeemed</td>
+                                <td>-500 points</td>
+                                <td><span class="uk-text-warning">⏳ Processing</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Program Setup Section -->
+        <div id="program" class="dashboard-section">
+            <h2 class="uk-heading-small uk-margin-bottom">Program Configuration</h2>
+
+            <div class="uk-grid-match uk-child-width-1-2@m" uk-grid>
+                <!-- Program Settings -->
+                <div>
+                    <div class="uk-card uk-card-default uk-card-body">
+                        <h3 class="uk-card-title">Program Settings</h3>
+                        
+                        <div class="uk-margin">
+                            <label class="uk-form-label">Program Name</label>
+                            <input class="uk-input" type="text" value="Mario's Pizza Loyalty" readonly />
+                        </div>
+                        
+                        <div class="uk-margin">
+                            <label class="uk-form-label">Card Type</label>
+                            <select class="uk-select" disabled>
+                                <option>Stamp Card (10 stamps = reward)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="uk-margin">
+                            <label class="uk-form-label">Reward Description</label>
+                            <input class="uk-input" type="text" value="Free Coffee" readonly />
+                        </div>
+                        
+                        <div class="uk-grid-small" uk-grid>
+                            <div>
+                                <button class="uk-button uk-button-primary" onclick="showFeatureDemo('Program Settings Editor')">📝 Edit Settings</button>
+                            </div>
+                            <div>
+                                <button class="uk-button uk-button-default" onclick="showFeatureDemo('Branding Customization')">🎨 Update Branding</button>
+                            </div>
+                            <div>
+                                <button class="uk-button uk-button-default" onclick="showFeatureDemo('QR Code Generator')">📱 Download QR Codes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Program Analytics -->
+                <div>
+                    <div class="uk-card uk-card-default uk-card-body">
+                        <h3 class="uk-card-title">Program Performance</h3>
+                        
+                        <div class="uk-margin">
+                            <div class="uk-text-small uk-text-muted">Completion Rate</div>
+                            <div class="uk-progress uk-margin-small-top">
+                                <div class="uk-progress-bar" style="width: 68%;"></div>
+                            </div>
+                            <div class="uk-text-small">68% complete their first reward</div>
+                        </div>
+                        
+                        <div class="uk-margin">
+                            <div class="uk-text-small uk-text-muted">Average Time to Reward</div>
+                            <div class="uk-text-large uk-text-bold">12.5 days</div>
+                        </div>
+                        
+                        <div class="uk-margin">
+                            <div class="uk-text-small uk-text-muted">Customer Retention</div>
+                            <div class="uk-text-large uk-text-bold">89%</div>
+                        </div>
+                        
+                        <div class="uk-alert uk-alert-success uk-margin-top">
+                            <h4>💡 Recommendation</h4>
+                            <p class="uk-margin-remove">Consider offering a mid-journey bonus at 5 stamps to improve completion rates.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Staff Management Section -->
+        <div id="staff" class="dashboard-section">
+            <div class="uk-flex uk-flex-between uk-flex-middle uk-margin-bottom">
+                <h2 class="uk-heading-small uk-margin-remove">Staff Management</h2>
+                <button class="uk-button uk-button-primary" onclick="showFeatureDemo('Staff Registration Form')">👥 Add Staff</button>
+            </div>
+
+            <!-- Staff List -->
+            <div class="uk-card uk-card-default">
+                <div class="uk-card-header">
+                    <h3 class="uk-card-title uk-margin-remove">Current Staff</h3>
+                </div>
+                
+                <div class="uk-overflow-auto">
+                    <table class="uk-table uk-table-hover">
+                        <thead>
+                            <tr>
+                                <th>Staff Member</th>
+                                <th>Role</th>
+                                <th>Last Active</th>
+                                <th>Transactions</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="uk-flex uk-flex-middle">
+                                        <div class="customer-avatar uk-background-primary uk-light">A</div>
+                                        <div>
+                                            <div class="uk-text-bold">Ahmad Rahman</div>
+                                            <div class="uk-text-small uk-text-muted">ahmad@mario-pizza.com</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="uk-badge uk-badge-warning">Manager</span></td>
+                                <td>2 minutes ago</td>
+                                <td>47 today</td>
+                                <td>
+                                    <button class="uk-button uk-button-small uk-button-default" onclick="showFeatureDemo('Staff Details')">View</button>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>
+                                    <div class="uk-flex uk-flex-middle">
+                                        <div class="customer-avatar uk-background-secondary uk-light">L</div>
+                                        <div>
+                                            <div class="uk-text-bold">Lisa Wong</div>
+                                            <div class="uk-text-small uk-text-muted">lisa@mario-pizza.com</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="uk-badge">Staff</span></td>
+                                <td>15 minutes ago</td>
+                                <td>23 today</td>
+                                <td>
+                                    <button class="uk-button uk-button-small uk-button-default" onclick="showFeatureDemo('Staff Details')">View</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="uk-card-footer">
+                    <div class="uk-grid-small" uk-grid>
+                        <div>
+                            <button class="uk-button uk-button-primary" onclick="showFeatureDemo('Staff Registration Form')">👥 Add New Staff</button>
+                        </div>
+                        <div>
+                            <button class="uk-button uk-button-default" onclick="showFeatureDemo('Permission Management')">⚙️ Manage Permissions</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analytics Section -->
+        <div id="analytics" class="dashboard-section">
+            <h2 class="uk-heading-small uk-margin-bottom">Business Analytics</h2>
+
+            <!-- Key Metrics -->
+            <div class="uk-grid-match uk-child-width-1-3@l uk-child-width-1-2@m" uk-grid>
+                <div>
+                    <div class="uk-card uk-card-primary uk-card-body uk-light uk-text-center">
+                        <div class="uk-text-large">🎯</div>
+                        <div class="uk-heading-small uk-margin-remove">89.2%</div>
+                        <div class="uk-text-small">Customer Retention</div>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="uk-card uk-card-secondary uk-card-body uk-light uk-text-center">
+                        <div class="uk-text-large">💰</div>
+                        <div class="uk-heading-small uk-margin-remove">RM 45.60</div>
+                        <div class="uk-text-small">Avg. Transaction</div>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="uk-card uk-card-default uk-card-body uk-text-center">
+                        <div class="uk-text-large">🔄</div>
+                        <div class="uk-heading-small uk-margin-remove">4.2x</div>
+                        <div class="uk-text-small">Visit Frequency</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed Analytics -->
+            <div class="uk-grid-match uk-child-width-1-2@m uk-margin-large-top" uk-grid>
+                <div>
+                    <div class="uk-card uk-card-default uk-card-body">
+                        <h3 class="uk-card-title">📊 Key Insights</h3>
+                        <ul class="uk-list uk-list-bullet">
+                            <li>Peak hours: 7-9 PM (42% of daily transactions)</li>
+                            <li>Most popular reward: Free Coffee (78% redemption rate)</li>
+                            <li>Customer acquisition cost decreased by 23%</li>
+                            <li>Mobile app engagement up 156%</li>
+                            <li>Average customer lifetime value: RM 890</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="uk-card uk-card-default uk-card-body">
+                        <h3 class="uk-card-title">🚀 Growth Opportunities</h3>
+                        <div class="uk-alert uk-alert-success">
+                            <strong>Recommended Actions:</strong>
+                            <ul class="uk-list uk-list-bullet uk-margin-small-top">
+                                <li>Launch weekend bonus campaign</li>
+                                <li>Introduce referral rewards</li>
+                                <li>Add lunch-time promotions</li>
+                                <li>Create VIP tier for top customers</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Navigation -->
+    <div class="uk-card uk-card-secondary uk-card-body uk-light uk-position-fixed uk-position-top-left uk-margin-left uk-margin-top">
+        <div class="uk-grid-small uk-child-width-1-1" uk-grid>
+            <div><a href="index.html" class="uk-button uk-button-small uk-button-default uk-width-1-1">🔙 Customer Journey</a></div>
+            <div><a href="card-types-demo.html" class="uk-button uk-button-small uk-button-default uk-width-1-1">🎯 8 Card Types</a></div>
+            <div><a href="staff-interface.html" class="uk-button uk-button-small uk-button-default uk-width-1-1">📱 Staff Interface</a></div>
+        </div>
+    </div>
+
+    <script>
+        function showSection(sectionName) {
+            // Hide all sections
+            document.querySelectorAll('.dashboard-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionName).classList.add('active');
+            
+            // Update tab states
+            document.querySelectorAll('.demo-tab').forEach(tab => {
+                tab.classList.remove('uk-button-primary');
+                tab.classList.add('uk-button-default');
+            });
+            
+            event.target.classList.remove('uk-button-default');
+            event.target.classList.add('uk-button-primary');
+        }
+
+        function showFeatureDemo(featureName) {
+            // Create modal overlay
+            const overlay = document.createElement('div');
+            overlay.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.5);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 1000;
+            `;
+            
+            const modal = document.createElement('div');
+            modal.className = 'uk-card uk-card-default uk-card-body uk-width-large';
+            modal.innerHTML = `
+                <h3 class="uk-card-title">${featureName}</h3>
+                <p>This feature would open the <strong>${featureName}</strong> interface in the actual application.</p>
+                <p class="uk-text-small uk-text-muted">In a real implementation, this would show the actual ${featureName.toLowerCase()} functionality with full CRUD operations, real-time updates, and proper validation.</p>
+                <button onclick="this.closest('div').remove()" class="uk-button uk-button-primary">Close</button>
+            `;
+            
+            overlay.appendChild(modal);
+            document.body.appendChild(overlay);
+            
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) {
+                    overlay.remove();
+                }
+            });
+        }
+
+        // Initialize first section
+        document.addEventListener('DOMContentLoaded', function() {
+            showSection('overview');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LoyalTea Staff Interface Demo</title>
+    
+    <!-- Franken UI CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/franken-ui@2.1.0-next.16/dist/css/core.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/franken-ui@2.1.0-next.16/dist/css/utilities.min.css" />
+    
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, "Inter", sans-serif;
+        }
+        
+        /* Phone Frame */
+        .phone-frame {
+            width: 375px;
+            height: 812px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .phone-screen {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .scan-button-large {
+            height: 250px !important;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .activity-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 0;
+        }
+        
+        .activity-avatar {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin-right: 0.75rem;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body class="uk-background-muted">
+    <!-- Phone Frame -->
+    <div class="uk-flex uk-flex-center uk-margin-large">
+        <div class="phone-frame uk-card uk-card-secondary uk-border-rounded uk-padding-small uk-box-shadow-large">
+            <div class="phone-screen uk-card uk-card-default uk-border-rounded">
+                <!-- Status Bar -->
+                <div class="uk-background-secondary uk-light uk-flex uk-flex-between uk-flex-middle uk-padding-small uk-text-small uk-text-bold">
+                    <span>9:41</span>
+                    <span>📶 📶 📶 🔋</span>
+                </div>
+
+                <div class="uk-height-1-1 uk-overflow-auto uk-padding">
+                    <!-- Staff Header -->
+                    <div class="uk-card uk-card-default uk-card-body uk-text-center uk-margin-bottom">
+                        <h2 class="uk-card-title uk-margin-small-bottom">Welcome back, Ahmad!</h2>
+                        <p class="uk-text-muted">Mario's Pizza Staff Portal</p>
+                        <div class="uk-flex uk-flex-center uk-margin-small-top">
+                            <span class="uk-badge uk-badge-success">Manager</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Large Scan Button -->
+                    <div class="uk-margin-bottom">
+                        <button class="uk-button uk-button-primary uk-button-large uk-width-1-1 scan-button-large" onclick="showScanResult()">
+                            <span style="font-size: 3rem;">📷</span>
+                            <span class="uk-text-large">SCAN</span>
+                            <span>CUSTOMER QR CODE</span>
+                        </button>
+                    </div>
+                    
+                    <!-- Quick Stats -->
+                    <div class="uk-grid-small uk-child-width-1-2" uk-grid>
+                        <div>
+                            <div class="uk-card uk-card-default uk-card-body uk-text-center">
+                                <div class="uk-text-large">47</div>
+                                <div class="uk-text-small uk-text-muted">Scans Today</div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="uk-card uk-card-default uk-card-body uk-text-center">
+                                <div class="uk-text-large">RM 1,245</div>
+                                <div class="uk-text-small uk-text-muted">Sales Today</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Recent Activity -->
+                    <div class="uk-card uk-card-default uk-card-body uk-margin-top">
+                        <h3 class="uk-card-title uk-text-small">Recent Activity</h3>
+                        
+                        <div class="activity-item uk-border-bottom">
+                            <div class="activity-avatar uk-background-primary uk-light">SL</div>
+                            <div class="uk-flex-1">
+                                <div class="uk-text-bold uk-text-small">Sarah Lim</div>
+                                <div class="uk-text-small uk-text-muted">+25 points earned</div>
+                            </div>
+                            <div class="uk-text-small uk-text-muted">5m</div>
+                        </div>
+                        
+                        <div class="activity-item uk-border-bottom">
+                            <div class="activity-avatar uk-background-secondary uk-light">MK</div>
+                            <div class="uk-flex-1">
+                                <div class="uk-text-bold uk-text-small">Mike Kumar</div>
+                                <div class="uk-text-small uk-text-muted">+1 stamp added</div>
+                            </div>
+                            <div class="uk-text-small uk-text-muted">12m</div>
+                        </div>
+                        
+                        <div class="activity-item">
+                            <div class="activity-avatar uk-background-secondary uk-light">LC</div>
+                            <div class="uk-flex-1">
+                                <div class="uk-text-bold uk-text-small">Lisa Chen</div>
+                                <div class="uk-text-small uk-text-muted">Gold member visit</div>
+                            </div>
+                            <div class="uk-text-small uk-text-muted">1h</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Quick Actions -->
+                    <div class="uk-margin-top">
+                        <div class="uk-grid-small uk-child-width-1-2" uk-grid>
+                            <div>
+                                <button class="uk-button uk-button-default uk-button-small uk-width-1-1" onclick="showFeatureDemo('Manual Entry')">
+                                    ✏️ Manual Entry
+                                </button>
+                            </div>
+                            <div>
+                                <button class="uk-button uk-button-default uk-button-small uk-width-1-1" onclick="showFeatureDemo('Daily Report')">
+                                    📊 Daily Report
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Transaction Modal -->
+    <div id="transactionModal" class="uk-modal">
+        <div class="uk-modal-dialog">
+            <div class="uk-modal-header">
+                <h2 class="uk-modal-title">QR Code Scanned Successfully!</h2>
+            </div>
+            <div class="uk-modal-body">
+                <div class="uk-alert uk-alert-success uk-text-center">
+                    <span class="uk-text-large">📱</span> Customer Found!
+                </div>
+                
+                <div class="uk-card uk-card-default uk-card-body">
+                    <div class="uk-text-center uk-margin-bottom">
+                        <div class="uk-text-bold uk-text-large">👤 John Doe</div>
+                        <div class="uk-text-muted">Silver Member</div>
+                        <div class="uk-text-small uk-text-muted">📧 john@example.com • 📱 +60 12-345 6789</div>
+                    </div>
+                    
+                    <div class="uk-alert uk-alert-primary uk-text-center">
+                        <strong>Current Progress:</strong> 7 of 10 stamps<br>
+                        <small>3 more stamps needed for free coffee!</small>
+                    </div>
+                    
+                    <div class="uk-grid-small uk-child-width-1-1" uk-grid>
+                        <div>
+                            <button class="uk-button uk-button-primary uk-width-1-1" onclick="addStamp()">
+                                ⭐ ADD STAMP
+                            </button>
+                        </div>
+                        <div>
+                            <button class="uk-button uk-button-default uk-width-1-1" onclick="showFeatureDemo('Customer History')">
+                                📋 VIEW HISTORY
+                            </button>
+                        </div>
+                        <div>
+                            <button class="uk-button uk-button-secondary uk-width-1-1" onclick="showFeatureDemo('Manual Override')">
+                                🔧 MANUAL OVERRIDE
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="uk-modal-footer uk-text-right">
+                <button class="uk-button uk-button-default uk-modal-close" type="button">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="uk-modal">
+        <div class="uk-modal-dialog">
+            <div class="uk-modal-header">
+                <h2 class="uk-modal-title">Transaction Complete! 🎉</h2>
+            </div>
+            <div class="uk-modal-body">
+                <div class="uk-alert uk-alert-success uk-text-center">
+                    <div class="uk-text-large uk-margin-bottom">✅</div>
+                    <h3>Stamp Added Successfully!</h3>
+                    <p class="uk-margin-remove">Customer wallet updated in real-time</p>
+                </div>
+                
+                <div class="uk-card uk-card-default uk-card-body">
+                    <div class="uk-text-center">
+                        <div class="uk-text-bold">John Doe</div>
+                        <div class="uk-text-muted uk-margin-small-bottom">New Progress: 8 of 10 stamps</div>
+                        
+                        <div class="uk-alert uk-alert-warning">
+                            🎯 Just 2 more stamps for FREE coffee!
+                        </div>
+                        
+                        <div class="uk-text-small uk-text-muted uk-margin-top">
+                            📲 Push notification sent<br>
+                            ⚡ Updated in real-time<br>
+                            📊 Transaction logged
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="uk-modal-footer uk-text-right">
+                <button class="uk-button uk-button-primary uk-modal-close" type="button">Continue</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Links -->
+    <div class="uk-card uk-card-secondary uk-card-body uk-light uk-position-fixed uk-position-top-left uk-margin-left uk-margin-top">
+        <div class="uk-grid-small uk-child-width-1-1" uk-grid>
+            <div><a href="index.html" class="uk-button uk-button-small uk-button-default uk-width-1-1">🔙 Customer Journey</a></div>
+            <div><a href="business-dashboard.html" class="uk-button uk-button-small uk-button-default uk-width-1-1">💼 Business Dashboard</a></div>
+            <div><a href="card-types-demo.html" class="uk-button uk-button-small uk-button-default uk-width-1-1">🎯 8 Card Types</a></div>
+        </div>
+    </div>
+
+    <!-- Technical Notes -->
+    <div class="uk-card uk-card-secondary uk-card-body uk-light uk-position-fixed uk-position-bottom-right uk-margin-right uk-margin-bottom uk-width-large">
+        <h4 class="uk-card-title">📱 Staff Interface Features</h4>
+        <div class="uk-text-small">
+            <strong>Real Staff Implementation:</strong><br>
+            • QR code camera integration<br>
+            • Real-time customer lookup<br>
+            • Transaction processing & logging<br>
+            • Offline mode for poor connectivity<br>
+            • Staff authentication & permissions<br>
+            • Daily sales reporting & analytics
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/franken-ui@2.1.0-next.16/dist/js/core.min.js"></script>
+    <script>
+        function showScanResult() {
+            UIkit.modal('#transactionModal').show();
+        }
+
+        function addStamp() {
+            UIkit.modal('#transactionModal').hide();
+            setTimeout(() => {
+                UIkit.modal('#successModal').show();
+            }, 500);
+        }
+
+        function showFeatureDemo(featureName) {
+            UIkit.notification({
+                message: `Opening ${featureName} interface...`,
+                status: 'primary',
+                pos: 'top-center',
+                timeout: 3000
+            });
+        }
+
+        // Initialize UIkit
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Staff interface loaded with Franken UI');
+        });
+    </script>
+</body>
+</html>

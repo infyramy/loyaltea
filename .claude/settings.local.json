@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(npm search:*)",
+      "WebSearch",
+      "Bash($env:PATH += \";C:\\Users\\Zahirul Iman\\.local\\bin\")",
+      "Bash(uvx:*)",
+      "Bash(\"C:\\Users\\Zahirul Iman\\.local\\bin\\uvx.exe\" --from \"git+https://github.com/oraios/serena\" serena-mcp-server --project \"D:\\testingdel\\loyaltea\" --transport sse --port 8000 --enable-web-dashboard true)",
+      "Bash(timeout:*)",
+      "Bash(ping:*)",
+      "Bash(mkdir:*)",
+      "Bash(dir:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

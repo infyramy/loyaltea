@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LoyalTea Owner Dashboard Demo v2.0</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f7fa;
+            color: #2d3748;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .nav-bar {
+            background: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: #667eea;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .sidebar {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            height: fit-content;
+        }
+
+        .main-content {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .business-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .business-logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #8B4513 0%, #D2691E 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+        }
+
+        .business-info h1 {
+            font-size: 1.8rem;
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+        }
+
+        .business-info p {
+            color: #718096;
+        }
+
+        .tier-badge {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: #f7fafc;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            border-left: 4px solid #667eea;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+            display: block;
+        }
+
+        .stat-label {
+            color: #718096;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .stat-trend {
+            font-size: 0.8rem;
+            color: #38a169;
+            margin-top: 0.25rem;
+        }
+
+        .campaign-card {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .campaign-card:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .campaign-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .campaign-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2d3748;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .campaign-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .campaign-stat {
+            text-align: center;
+        }
+
+        .campaign-stat-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .campaign-stat-label {
+            font-size: 0.8rem;
+            color: #718096;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-success {
+            background: #48bb78;
+            color: white;
+        }
+
+        .btn-warning {
+            background: #ed8936;
+            color: white;
+        }
+
+        .tier-limitation {
+            background: #fef5e7;
+            border: 2px solid #ed8936;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .tier-limitation h3 {
+            color: #ed8936;
+            margin-bottom: 1rem;
+        }
+
+        .upgrade-prompt {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #718096;
+            cursor: pointer;
+        }
+
+        .card-type-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .card-type-option {
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .card-type-option:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .card-type-option.selected {
+            border-color: #667eea;
+            background: #edf2f7;
+        }
+
+        .card-type-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group {
+            margin: 1rem 0;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #2d3748;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .staff-card {
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+
+        .staff-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .staff-name {
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .staff-role {
+            background: #667eea;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+
+        .staff-details {
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .alert-success {
+            background: #f0fff4;
+            border: 1px solid #68d391;
+            color: #22543d;
+        }
+
+        .alert-warning {
+            background: #fffbeb;
+            border: 1px solid #f6e05e;
+            color: #744210;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-bar {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .campaign-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>👨‍💼 LoyalTea Owner Dashboard v2.0</h1>
+        <p>Campaign management for Malaysian SME businesses</p>
+    </div>
+
+    <div class="nav-bar">
+        <div class="nav-links">
+            <a href="#" class="active">🏠 Dashboard</a>
+            <a href="#" onclick="showSection('campaigns')">🎯 Campaigns</a>
+            <a href="#" onclick="showSection('staff')">👥 Staff</a>
+            <a href="#" onclick="showSection('analytics')">📊 Analytics</a>
+            <a href="#" onclick="showSection('settings')">⚙️ Settings</a>
+        </div>
+        <div>
+            <a href="index.html" class="btn btn-secondary">👥 Customer Demo</a>
+            <a href="staff-scanner.html" class="btn btn-secondary">📱 Staff Demo</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Dashboard Overview -->
+        <div id="dashboard-section">
+            <div class="dashboard-grid">
+                <div class="sidebar">
+                    <div class="business-header">
+                        <div class="business-logo">☕</div>
+                        <div class="business-info">
+                            <h1>Kedai Kopi Ah Beng</h1>
+                            <p>📍 Semenyih, Selangor</p>
+                            <span class="tier-badge">Basic Plan - RM99/month</span>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-warning">
+                        <strong>⚠️ Plan Limitation:</strong><br>
+                        You're using 1 of 1 allowed campaigns on Basic plan.
+                        <a href="#" onclick="showUpgradeModal()" style="color: #667eea;">Upgrade to Business (RM199)</a> for 3 campaigns.
+                    </div>
+
+                    <div style="margin-top: 2rem;">
+                        <h3>🎯 Quick Actions</h3>
+                        <div style="margin: 1rem 0;">
+                            <button class="btn btn-primary" onclick="showCreateCampaignModal()" style="width: 100%; margin: 0.5rem 0;">
+                                + Create New Campaign
+                            </button>
+                            <button class="btn btn-secondary" onclick="showSection('staff')" style="width: 100%; margin: 0.5rem 0;">
+                                👥 Manage Staff
+                            </button>
+                            <button class="btn btn-secondary" onclick="generateQRCodes()" style="width: 100%; margin: 0.5rem 0;">
+                                📱 Download QR Codes
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="main-content">
+                    <h2>📊 Business Overview - January 2024</h2>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <span class="stat-number">89</span>
+                            <div class="stat-label">Total Customers</div>
+                            <div class="stat-trend">+12 new this month</div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">1/1</span>
+                            <div class="stat-label">Active Campaigns</div>
+                            <div class="stat-trend">Basic tier limit</div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">456</span>
+                            <div class="stat-label">Transactions</div>
+                            <div class="stat-trend">+23% from last month</div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">23</span>
+                            <div class="stat-label">Rewards Redeemed</div>
+                            <div class="stat-trend">5.0% redemption rate</div>
+                        </div>
+                    </div>
+
+                    <h3>🎯 Your Active Campaign</h3>
+                    
+                    <div class="campaign-card">
+                        <div class="campaign-header">
+                            <div class="campaign-title">
+                                ☕ Coffee Stamp Card
+                                <span class="tier-badge" style="background: #48bb78;">Active</span>
+                            </div>
+                            <div>
+                                <button class="btn btn-secondary" onclick="editCampaign()">✏️ Edit</button>
+                                <button class="btn btn-secondary" onclick="viewAnalytics()">📊 Analytics</button>
+                            </div>
+                        </div>
+                        
+                        <p style="color: #718096; margin: 1rem 0;">
+                            Collect 10 stamps, get 1 FREE premium coffee
+                        </p>
+                        
+                        <div class="campaign-stats">
+                            <div class="campaign-stat">
+                                <div class="campaign-stat-number">89</div>
+                                <div class="campaign-stat-label">Active Customers</div>
+                            </div>
+                            <div class="campaign-stat">
+                                <div class="campaign-stat-number">456</div>
+                                <div class="campaign-stat-label">Stamps Given</div>
+                            </div>
+                            <div class="campaign-stat">
+                                <div class="campaign-stat-number">23</div>
+                                <div class="campaign-stat-label">Rewards Claimed</div>
+                            </div>
+                        </div>
+                        
+                        <div style="background: #f7fafc; padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                            <h4>📱 QR Code Integration</h4>
+                            <p style="color: #718096; font-size: 0.9rem;">
+                                Customer URL: <code style="background: #e2e8f0; padding: 0.25rem;">app.loyaltea.my/kedaiA/customer</code>
+                            </p>
+                            <button class="btn btn-success" onclick="generateQRCodes()" style="margin-top: 0.5rem;">
+                                📥 Download QR Codes for Counter
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Campaigns Section -->
+        <div id="campaigns-section" style="display: none;">
+            <h2>🎯 Campaign Management</h2>
+            
+            <div class="tier-limitation">
+                <h3>📊 Your Current Plan: Basic (RM99/month)</h3>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1rem 0;">
+                    <div>
+                        <strong>Campaigns:</strong> 1/1 used ⚠️
+                    </div>
+                    <div>
+                        <strong>Customers:</strong> 89/500
+                    </div>
+                    <div>
+                        <strong>Staff:</strong> 2/3
+                    </div>
+                </div>
+                <p>Want more campaigns? <a href="#" onclick="showUpgradeModal()" style="color: #667eea;">Upgrade to Business Plan (RM199/month)</a> for 3 campaigns + advanced features!</p>
+            </div>
+
+            <div class="campaign-card">
+                <div class="campaign-header">
+                    <div class="campaign-title">
+                        ☕ Coffee Stamp Card
+                        <span class="tier-badge" style="background: #48bb78;">Active</span>
+                    </div>
+                    <div>
+                        <button class="btn btn-secondary" onclick="editCampaign()">✏️ Edit Card Design</button>
+                        <button class="btn btn-secondary" onclick="pauseCampaign()">⏸️ Pause</button>
+                    </div>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 2rem; margin: 1rem 0;">
+                    <div>
+                        <h4>Campaign Settings</h4>
+                        <ul style="color: #718096;">
+                            <li><strong>Type:</strong> Stamp Card</li>
+                            <li><strong>Stamps Required:</strong> 10</li>
+                            <li><strong>Reward:</strong> Free premium coffee</li>
+                            <li><strong>Auto-reset:</strong> Yes</li>
+                            <li><strong>Created:</strong> Dec 15, 2023</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>Performance This Month</h4>
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <span class="stat-number">456</span>
+                                <div class="stat-label">Stamps Given</div>
+                            </div>
+                            <div class="stat-card">
+                                <span class="stat-number">23</span>
+                                <div class="stat-label">Rewards Redeemed</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="upgrade-prompt">
+                <h3>🚀 Want More Campaigns?</h3>
+                <p>Create VIP Membership, Staff Badges, or Seasonal Promotions!</p>
+                <button class="btn btn-success" onclick="showUpgradeModal()">Upgrade to Business Plan - RM199/month</button>
+            </div>
+        </div>
+
+        <!-- Staff Section -->
+        <div id="staff-section" style="display: none;">
+            <h2>👥 Staff Management</h2>
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; margin: 1rem 0;">
+                <p>Current Staff: 2/3 (Basic plan limit)</p>
+                <button class="btn btn-primary" onclick="showAddStaffModal()">+ Add New Staff</button>
+            </div>
+
+            <div class="staff-card">
+                <div class="staff-header">
+                    <div class="staff-name">👤 Ahmad Rahman</div>
+                    <div class="staff-role">Manager</div>
+                </div>
+                <div class="staff-details">
+                    <p>📱 Phone: 019-123-4567</p>
+                    <p>🎯 Access: All campaigns</p>
+                    <p>🕐 Last scanner use: 1 hour ago</p>
+                    <p>📊 Today's activity: 12 customers served, 15 stamps given</p>
+                    <div style="margin-top: 0.5rem;">
+                        <button class="btn btn-secondary" style="font-size: 0.8rem; padding: 0.5rem 1rem;">✏️ Edit Access</button>
+                        <button class="btn btn-secondary" style="font-size: 0.8rem; padding: 0.5rem 1rem;">🔑 Reset Password</button>
+                        <button class="btn btn-secondary" style="font-size: 0.8rem; padding: 0.5rem 1rem;">📊 View Activity</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="staff-card">
+                <div class="staff-header">
+                    <div class="staff-name">👤 Siti Aminah</div>
+                    <div class="staff-role">Cashier</div>
+                </div>
+                <div class="staff-details">
+                    <p>📱 Phone: 012-987-6543</p>
+                    <p>🎯 Access: Coffee Stamp Card only</p>
+                    <p>🕐 Last scanner use: <span style="color: #48bb78;">Active now ✅</span></p>
+                    <p>📊 Today's activity: 8 customers served, 11 stamps given</p>
+                    <div style="margin-top: 0.5rem;">
+                        <button class="btn btn-secondary" style="font-size: 0.8rem; padding: 0.5rem 1rem;">✏️ Edit Access</button>
+                        <button class="btn btn-secondary" style="font-size: 0.8rem; padding: 0.5rem 1rem;">🔑 Reset Password</button>
+                        <button class="btn btn-secondary" style="font-size: 0.8rem; padding: 0.5rem 1rem;">📊 View Activity</button>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background: #f0f8ff; padding: 1.5rem; border-radius: 12px; margin: 2rem 0;">
+                <h3>📱 Staff Login Instructions</h3>
+                <ol>
+                    <li>Go to: <code>app.loyaltea.my/login</code></li>
+                    <li>Enter phone number + password</li>
+                    <li>Use scanner to add stamps/points</li>
+                </ol>
+                <p style="margin-top: 1rem;">
+                    <strong>Need help training staff?</strong> 
+                    <button class="btn btn-success">📞 WhatsApp Support</button>
+                </p>
+            </div>
+        </div>
+
+        <!-- Analytics Section -->
+        <div id="analytics-section" style="display: none;">
+            <h2>📊 Business Analytics</h2>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number">89</span>
+                    <div class="stat-label">Total Customers</div>
+                    <div class="stat-trend">+15% month-over-month</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">5.1</span>
+                    <div class="stat-label">Avg Visits per Customer</div>
+                    <div class="stat-trend">+8% from last month</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">25%</span>
+                    <div class="stat-label">Completion Rate</div>
+                    <div class="stat-trend">Above industry average</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">RM2,340</span>
+                    <div class="stat-label">Estimated Revenue Impact</div>
+                    <div class="stat-trend">From loyalty program</div>
+                </div>
+            </div>
+
+            <div style="background: white; border-radius: 12px; padding: 2rem; box-shadow: 0 4px 20px rgba(0,0,0,0.1); margin: 2rem 0;">
+                <h3>☕ Coffee Stamp Card Performance</h3>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin: 2rem 0;">
+                    <div>
+                        <h4>👥 Customer Engagement</h4>
+                        <ul style="color: #718096;">
+                            <li>New customers this month: 12</li>
+                            <li>Returning customers: 77</li>
+                            <li>Average days between visits: 4.2</li>
+                            <li>Most active customer: Sarah L (8 visits)</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>🎯 Loyalty Progress</h4>
+                        <ul style="color: #718096;">
+                            <li>Total stamps given: 456</li>
+                            <li>Rewards redeemed: 23</li>
+                            <li>Cards completed: 46</li>
+                            <li>Average stamps per visit: 1.0</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>📈 Business Impact</h4>
+                        <ul style="color: #718096;">
+                            <li>Customer retention: +32%</li>
+                            <li>Average transaction value: +15%</li>
+                            <li>Visit frequency: +28%</li>
+                            <li>Word-of-mouth referrals: 18</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="upgrade-prompt">
+                <h3>📊 Want Advanced Analytics?</h3>
+                <p>Get customer segmentation, predictive insights, and ROI tracking!</p>
+                <button class="btn btn-success" onclick="showUpgradeModal()">Upgrade to Business Plan</button>
+            </div>
+        </div>
+
+        <!-- Settings Section -->
+        <div id="settings-section" style="display: none;">
+            <h2>⚙️ Business Settings</h2>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+                <div style="background: white; border-radius: 12px; padding: 2rem; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+                    <h3>🏪 Business Information</h3>
+                    <div class="form-group">
+                        <label>Business Name</label>
+                        <input type="text" value="Kedai Kopi Ah Beng">
+                    </div>
+                    <div class="form-group">
+                        <label>Address</label>
+                        <textarea>Jalan Semenyih 1, Taman Semenyih, 43500 Semenyih, Selangor</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input type="tel" value="03-8723-4567">
+                    </div>
+                    <button class="btn btn-primary">💾 Save Changes</button>
+                </div>
+
+                <div style="background: white; border-radius: 12px; padding: 2rem; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+                    <h3>🎨 Branding Settings</h3>
+                    <div class="form-group">
+                        <label>Business Logo</label>
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <div class="business-logo" style="width: 60px; height: 60px;">☕</div>
+                            <button class="btn btn-secondary">📷 Upload New Logo</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Primary Color</label>
+                        <input type="color" value="#8B4513">
+                    </div>
+                    <div class="form-group">
+                        <label>Secondary Color</label>
+                        <input type="color" value="#D2691E">
+                    </div>
+                    <button class="btn btn-primary">🎨 Update Branding</button>
+                </div>
+
+                <div style="background: white; border-radius: 12px; padding: 2rem; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+                    <h3>💳 Subscription</h3>
+                    <div style="background: #f7fafc; padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <strong>Basic Plan</strong>
+                                <div style="color: #718096; font-size: 0.9rem;">RM99/month</div>
+                            </div>
+                            <span class="tier-badge">Current Plan</span>
+                        </div>
+                    </div>
+                    <div style="color: #718096; margin: 1rem 0;">
+                        <ul>
+                            <li>✅ 1 campaign</li>
+                            <li>✅ 500 customers</li>
+                            <li>✅ 3 staff accounts</li>
+                            <li>✅ Basic analytics</li>
+                        </ul>
+                    </div>
+                    <button class="btn btn-success" onclick="showUpgradeModal()">🚀 Upgrade Plan</button>
+                    <div style="margin-top: 1rem; font-size: 0.9rem; color: #718096;">
+                        <p>Next billing: February 15, 2024</p>
+                        <p>Payment method: Bank transfer</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <!-- Create Campaign Modal -->
+    <div id="create-campaign-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>🚀 Upgrade Required</h3>
+                <button class="close-btn" onclick="closeModal('create-campaign-modal')">&times;</button>
+            </div>
+            <div>
+                <div class="alert alert-warning">
+                    <strong>⚠️ Campaign Limit Reached</strong><br>
+                    Your current plan (Basic - RM99/month) includes 1 campaign, which you're already using.
+                </div>
+
+                <h4>Upgrade to Business Plan (RM199/month) to get:</h4>
+                <ul style="margin: 1rem 0;">
+                    <li>✅ <strong>3 campaigns</strong> (2 more available)</li>
+                    <li>✅ <strong>Advanced card types</strong> (membership, employee badges)</li>
+                    <li>✅ <strong>Enhanced customization</strong> options</li>
+                    <li>✅ <strong>Customer segmentation</strong> tools</li>
+                    <li>✅ <strong>Priority support</strong></li>
+                </ul>
+
+                <div style="background: #f0f8ff; padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                    <h4>💡 Popular Campaign Combinations for Cafes:</h4>
+                    <ul>
+                        <li>☕ Coffee Stamp Card (your current)</li>
+                        <li>👑 VIP Membership Card (frequent customers)</li>
+                        <li>👨‍💼 Staff Badge Card (employee perks)</li>
+                    </ul>
+                </div>
+
+                <button class="btn btn-success" onclick="showUpgradeModal(); closeModal('create-campaign-modal')">
+                    🚀 Upgrade Now - RM199/month
+                </button>
+                <button class="btn btn-secondary" onclick="closeModal('create-campaign-modal')">
+                    Maybe Later
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upgrade Plan Modal -->
+    <div id="upgrade-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>🚀 Upgrade Your Plan</h3>
+                <button class="close-btn" onclick="closeModal('upgrade-modal')">&times;</button>
+            </div>
+            <div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin: 1rem 0;">
+                    <!-- Current Plan -->
+                    <div style="background: #f7fafc; border: 2px solid #e2e8f0; border-radius: 12px; padding: 1.5rem;">
+                        <div style="text-align: center;">
+                            <h4>Basic Plan</h4>
+                            <div style="font-size: 2rem; font-weight: bold; color: #718096;">RM99</div>
+                            <div style="color: #718096;">/month</div>
+                            <div style="margin: 1rem 0; padding: 0.5rem; background: #e2e8f0; border-radius: 20px; font-size: 0.8rem;">
+                                Current Plan
+                            </div>
+                        </div>
+                        <ul style="font-size: 0.9rem; color: #718096;">
+                            <li>✅ 1 campaign</li>
+                            <li>✅ 500 customers</li>
+                            <li>✅ 3 staff accounts</li>
+                            <li>✅ Basic analytics</li>
+                            <li>✅ WhatsApp support</li>
+                        </ul>
+                    </div>
+
+                    <!-- Business Plan -->
+                    <div style="background: white; border: 2px solid #667eea; border-radius: 12px; padding: 1.5rem; position: relative;">
+                        <div style="position: absolute; top: -10px; left: 50%; transform: translateX(-50%); background: #667eea; color: white; padding: 0.25rem 1rem; border-radius: 20px; font-size: 0.8rem;">
+                            Recommended
+                        </div>
+                        <div style="text-align: center; margin-top: 1rem;">
+                            <h4>Business Plan</h4>
+                            <div style="font-size: 2rem; font-weight: bold; color: #667eea;">RM199</div>
+                            <div style="color: #718096;">/month</div>
+                        </div>
+                        <ul style="font-size: 0.9rem; color: #2d3748; margin: 1rem 0;">
+                            <li>✅ <strong>3 campaigns</strong></li>
+                            <li>✅ <strong>1,500 customers</strong></li>
+                            <li>✅ <strong>10 staff accounts</strong></li>
+                            <li>✅ <strong>Advanced card types</strong></li>
+                            <li>✅ <strong>Enhanced customization</strong></li>
+                            <li>✅ <strong>Customer segmentation</strong></li>
+                            <li>✅ <strong>Priority phone support</strong></li>
+                        </ul>
+                        <button class="btn btn-primary" onclick="confirmUpgrade()" style="width: 100%;">
+                            🚀 Upgrade to Business
+                        </button>
+                    </div>
+
+                    <!-- Multi-Branch Plan -->
+                    <div style="background: #f7fafc; border: 2px solid #e2e8f0; border-radius: 12px; padding: 1.5rem;">
+                        <div style="text-align: center;">
+                            <h4>Multi-Branch Plan</h4>
+                            <div style="font-size: 2rem; font-weight: bold; color: #718096;">RM299</div>
+                            <div style="color: #718096;">/month</div>
+                        </div>
+                        <ul style="font-size: 0.9rem; color: #718096;">
+                            <li>✅ 3 branch locations</li>
+                            <li>✅ Unlimited campaigns</li>
+                            <li>✅ 2K customers/branch</li>
+                            <li>✅ Multi-location dashboard</li>
+                            <li>✅ Advanced analytics</li>
+                            <li>✅ Dedicated support</li>
+                        </ul>
+                        <div style="text-align: center; margin-top: 1rem; color: #718096; font-size: 0.9rem;">
+                            Perfect for small chains
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin: 2rem 0;">
+                    <p style="color: #718096;">💡 You can upgrade or downgrade anytime. No long-term contracts.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Staff Modal -->
+    <div id="add-staff-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>👥 Add New Staff Member</h3>
+                <button class="close-btn" onclick="closeModal('add-staff-modal')">&times;</button>
+            </div>
+            <div>
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" placeholder="e.g., Raj Kumar">
+                </div>
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="tel" placeholder="011-555-7890">
+                </div>
+                <div class="form-group">
+                    <label>Role</label>
+                    <select>
+                        <option value="cashier">Cashier</option>
+                        <option value="manager">Manager</option>
+                        <option value="part-time">Part-time</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Campaign Access</label>
+                    <div style="background: #f7fafc; padding: 1rem; border-radius: 8px;">
+                        <label style="display: flex; align-items: center; gap: 0.5rem;">
+                            <input type="checkbox" checked>
+                            ☕ Coffee Stamp Card
+                        </label>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <button class="btn btn-primary" onclick="addStaff()">👥 Add Staff Member</button>
+                    <button class="btn btn-secondary" onclick="closeModal('add-staff-modal')">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showSection(section) {
+            // Hide all sections
+            const sections = ['dashboard', 'campaigns', 'staff', 'analytics', 'settings'];
+            sections.forEach(s => {
+                const element = document.getElementById(s + '-section');
+                if (element) {
+                    element.style.display = 'none';
+                }
+            });
+
+            // Show target section
+            const targetSection = document.getElementById(section + '-section');
+            if (targetSection) {
+                targetSection.style.display = 'block';
+            }
+
+            // Update navigation
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        function showCreateCampaignModal() {
+            document.getElementById('create-campaign-modal').classList.add('show');
+        }
+
+        function showUpgradeModal() {
+            document.getElementById('upgrade-modal').classList.add('show');
+        }
+
+        function showAddStaffModal() {
+            document.getElementById('add-staff-modal').classList.add('show');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('show');
+        }
+
+        function confirmUpgrade() {
+            alert('🚀 Upgrade to Business Plan confirmed!\n\n✅ You now have access to:\n• 3 campaigns (2 more available)\n• Advanced card types\n• Enhanced customization\n• Priority support\n\n💳 Billing: RM199/month starting next cycle');
+            closeModal('upgrade-modal');
+            
+            // Simulate plan upgrade
+            setTimeout(() => {
+                location.reload();
+            }, 2000);
+        }
+
+        function addStaff() {
+            alert('👥 Staff member added successfully!\n\n📧 Login instructions sent to their phone\n📱 They can now access the staff scanner at app.loyaltea.my/login');
+            closeModal('add-staff-modal');
+        }
+
+        function editCampaign() {
+            alert('✏️ Opening card editor...\n\n🎨 You can customize:\n• Logo and colors\n• Card title and description\n• Reward text\n• Background themes');
+        }
+
+        function generateQRCodes() {
+            alert('📱 QR Codes Generated!\n\n✅ Customer registration QR\n✅ Counter display QR\n✅ Staff training materials\n\n📧 Download link sent to your email');
+        }
+
+        function viewAnalytics() {
+            showSection('analytics');
+        }
+
+        function pauseCampaign() {
+            if (confirm('⏸️ Are you sure you want to pause this campaign?\n\nCustomers won\'t be able to register new cards, but existing cards will still work.')) {
+                alert('⏸️ Campaign paused successfully!\n\nYou can reactivate it anytime from the campaign settings.');
+            }
+        }
+
+        // Close modals when clicking outside
+        window.addEventListener('click', function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.classList.remove('show');
+            }
+        });
+    </script>
+</body>
+</html>

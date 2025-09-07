@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LoyalTea Superadmin Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f8f9fa;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #1a2332 0%, #2c3e50 100%);
+            color: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .notification-btn {
+            position: relative;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            padding: 0.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .notification-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Main Layout */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 2rem;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            color: #6c757d;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: rgba(26, 35, 50, 0.1);
+            color: #1a2332;
+        }
+
+        .nav-link i {
+            width: 20px;
+            margin-right: 0.75rem;
+        }
+
+        /* Content */
+        .content {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            min-height: 600px;
+        }
+
+        .content-header {
+            padding: 2rem 2rem 1rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .content-header h2 {
+            color: #1a2332;
+            margin-bottom: 0.5rem;
+        }
+
+        .content-header p {
+            color: #6c757d;
+        }
+
+        .content-body {
+            padding: 2rem;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card.revenue {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+
+        .stat-card.customers {
+            background: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%);
+        }
+
+        .stat-card.businesses {
+            background: linear-gradient(135deg, #3742fa 0%, #2f3542 100%);
+        }
+
+        .stat-card.growth {
+            background: linear-gradient(135deg, #ff9ff3 0%, #f368e0 100%);
+        }
+
+        .stat-icon {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 2rem;
+            opacity: 0.3;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .stat-change {
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+            opacity: 0.8;
+        }
+
+        /* Tables */
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .table-header {
+            background: #f8f9fa;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .table-header h3 {
+            color: #1a2332;
+            font-size: 1.1rem;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th,
+        .table td {
+            padding: 1rem 1.5rem;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #1a2332;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+
+        .table tbody tr:hover {
+            background: rgba(26, 35, 50, 0.02);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-suspended {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        /* Action Buttons */
+        .btn {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: #1a2332;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #2c3e50;
+            transform: translateY(-1px);
+        }
+
+        .btn.btn-sm {
+            padding: 0.25rem 0.75rem;
+            font-size: 0.8rem;
+        }
+
+        .btn.btn-outline {
+            background: transparent;
+            color: #1a2332;
+            border: 1px solid #1a2332;
+        }
+
+        .btn.btn-outline:hover {
+            background: #1a2332;
+            color: white;
+        }
+
+        .btn.btn-success {
+            background: #28a745;
+        }
+
+        .btn.btn-success:hover {
+            background: #1e7e34;
+        }
+
+        .btn.btn-danger {
+            background: #dc3545;
+        }
+
+        .btn.btn-danger:hover {
+            background: #c82333;
+        }
+
+        /* Charts Placeholder */
+        .chart-container {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            color: #6c757d;
+            margin-bottom: 2rem;
+        }
+
+        .chart-placeholder {
+            width: 100%;
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            border: 2px dashed #dee2e6;
+            border-radius: 8px;
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Search and Filters */
+        .filters-bar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 200px;
+            padding: 0.75rem;
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        .filter-select {
+            padding: 0.75rem;
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            background: white;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .main-container {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+                padding: 1rem;
+            }
+            
+            .sidebar {
+                position: static;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+            
+            .content-body {
+                padding: 1rem;
+            }
+            
+            .table-container {
+                overflow-x: auto;
+            }
+            
+            .filters-bar {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-content">
+            <h1><i class="fas fa-crown"></i> LoyalTea Superadmin</h1>
+            <div class="header-actions">
+                <button class="notification-btn">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">3</span>
+                </button>
+                <span>Admin: John Doe</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#" class="nav-link active" onclick="showTab('overview')">
+                        <i class="fas fa-tachometer-alt"></i> Overview
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="showTab('businesses')">
+                        <i class="fas fa-store"></i> Businesses
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="showTab('customers')">
+                        <i class="fas fa-users"></i> Customers
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="showTab('billing')">
+                        <i class="fas fa-credit-card"></i> Billing
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="showTab('analytics')">
+                        <i class="fas fa-chart-bar"></i> Analytics
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="showTab('support')">
+                        <i class="fas fa-headset"></i> Support
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="content">
+            <!-- Overview Tab -->
+            <div class="tab-content active" id="overview-tab">
+                <div class="content-header">
+                    <h2>Platform Overview</h2>
+                    <p>Monitor the health and performance of the LoyalTea platform</p>
+                </div>
+                <div class="content-body">
+                    <!-- Stats Grid -->
+                    <div class="stats-grid">
+                        <div class="stat-card revenue">
+                            <i class="fas fa-dollar-sign stat-icon"></i>
+                            <div class="stat-value">RM 24,680</div>
+                            <div class="stat-label">Monthly Revenue</div>
+                            <div class="stat-change"><i class="fas fa-arrow-up"></i> +12.5% from last month</div>
+                        </div>
+                        <div class="stat-card businesses">
+                            <i class="fas fa-store stat-icon"></i>
+                            <div class="stat-value">127</div>
+                            <div class="stat-label">Active Businesses</div>
+                            <div class="stat-change"><i class="fas fa-arrow-up"></i> +8 new this month</div>
+                        </div>
+                        <div class="stat-card customers">
+                            <i class="fas fa-users stat-icon"></i>
+                            <div class="stat-value">15,420</div>
+                            <div class="stat-label">Total Customers</div>
+                            <div class="stat-change"><i class="fas fa-arrow-up"></i> +1,240 this month</div>
+                        </div>
+                        <div class="stat-card growth">
+                            <i class="fas fa-chart-line stat-icon"></i>
+                            <div class="stat-value">98.5%</div>
+                            <div class="stat-label">Platform Uptime</div>
+                            <div class="stat-change"><i class="fas fa-check"></i> All systems operational</div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Businesses -->
+                    <div class="table-container">
+                        <div class="table-header">
+                            <h3>Recent Business Registrations</h3>
+                            <button class="btn btn-sm">View All</button>
+                        </div>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Business Name</th>
+                                    <th>Owner</th>
+                                    <th>Plan</th>
+                                    <th>Joined</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Restoran Golden Dragon</strong><br><small>Chinese Restaurant</small></td>
+                                    <td>Lim Ah Seng<br><small>+60 12-345-6789</small></td>
+                                    <td><span class="status-badge" style="background: #e3f2fd; color: #1565c0;">Business (RM199)</span></td>
+                                    <td>Sep 5, 2024</td>
+                                    <td><span class="status-badge status-pending">Pending Setup</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-success">Approve</button>
+                                        <button class="btn btn-sm btn-outline">Review</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Kedai Gunting Rambut Ali</strong><br><small>Barbershop</small></td>
+                                    <td>Ali Hassan<br><small>+60 19-876-5432</small></td>
+                                    <td><span class="status-badge" style="background: #f3e5f5; color: #4a148c;">Basic (RM99)</span></td>
+                                    <td>Sep 4, 2024</td>
+                                    <td><span class="status-badge status-active">Active</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline">Manage</button>
+                                        <button class="btn btn-sm">Support</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Beauty Salon Siti</strong><br><small>Beauty & Wellness</small></td>
+                                    <td>Siti Aminah<br><small>+60 16-234-5678</small></td>
+                                    <td><span class="status-badge" style="background: #e8f5e8; color: #2e7d32;">Multi-Branch (RM299)</span></td>
+                                    <td>Sep 3, 2024</td>
+                                    <td><span class="status-badge status-active">Active</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline">Manage</button>
+                                        <button class="btn btn-sm">Support</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Platform Health -->
+                    <div class="chart-container">
+                        <div class="chart-placeholder">
+                            <i class="fas fa-chart-area" style="font-size: 3rem; margin-bottom: 1rem; color: #ced4da;"></i>
+                            <h4>Platform Usage Analytics</h4>
+                            <p>Interactive charts showing customer engagement, transaction volumes, and business performance metrics would be displayed here.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Businesses Tab -->
+            <div class="tab-content" id="businesses-tab">
+                <div class="content-header">
+                    <h2>Business Management</h2>
+                    <p>Manage all businesses on the LoyalTea platform</p>
+                </div>
+                <div class="content-body">
+                    <div class="filters-bar">
+                        <input type="search" class="search-input" placeholder="Search businesses...">
+                        <select class="filter-select">
+                            <option>All Plans</option>
+                            <option>Basic (RM99)</option>
+                            <option>Business (RM199)</option>
+                            <option>Multi-Branch (RM299)</option>
+                        </select>
+                        <select class="filter-select">
+                            <option>All Status</option>
+                            <option>Active</option>
+                            <option>Pending</option>
+                            <option>Suspended</option>
+                        </select>
+                        <button class="btn">Export</button>
+                    </div>
+
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Business</th>
+                                    <th>Contact</th>
+                                    <th>Plan & Billing</th>
+                                    <th>Usage</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <strong>Kedai Kopi Ah Lim</strong><br>
+                                        <small>Traditional Coffee Shop</small><br>
+                                        <small style="color: #6c757d;">ID: BIZ001</small>
+                                    </td>
+                                    <td>
+                                        Lim Wei Keong<br>
+                                        <small>+60 12-345-6789</small><br>
+                                        <small>limwk@email.com</small>
+                                    </td>
+                                    <td>
+                                        <span class="status-badge" style="background: #e3f2fd; color: #1565c0;">Business (RM199)</span><br>
+                                        <small>Next: Oct 15, 2024</small><br>
+                                        <small style="color: #28a745;">Paid</small>
+                                    </td>
+                                    <td>
+                                        <strong>2/3</strong> Campaigns<br>
+                                        <strong>420/1500</strong> Customers<br>
+                                        <small>28% utilization</small>
+                                    </td>
+                                    <td><span class="status-badge status-active">Active</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline" onclick="manageBusiness('BIZ001')">Manage</button><br>
+                                        <button class="btn btn-sm btn-danger" style="margin-top: 0.25rem;">Suspend</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Nasi Lemak Mak Jah</strong><br>
+                                        <small>Food & Beverage</small><br>
+                                        <small style="color: #6c757d;">ID: BIZ002</small>
+                                    </td>
+                                    <td>
+                                        Jaharah Binti Ahmad<br>
+                                        <small>+60 19-876-5432</small><br>
+                                        <small>jaharah@email.com</small>
+                                    </td>
+                                    <td>
+                                        <span class="status-badge" style="background: #f3e5f5; color: #4a148c;">Basic (RM99)</span><br>
+                                        <small>Next: Sep 20, 2024</small><br>
+                                        <small style="color: #ffc107;">Overdue</small>
+                                    </td>
+                                    <td>
+                                        <strong>1/1</strong> Campaign<br>
+                                        <strong>245/500</strong> Customers<br>
+                                        <small>49% utilization</small>
+                                    </td>
+                                    <td><span class="status-badge status-pending">Payment Due</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline">Payment</button><br>
+                                        <button class="btn btn-sm" style="margin-top: 0.25rem;">Contact</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Pharmacy Lee & Sons</strong><br>
+                                        <small>Healthcare & Pharmacy</small><br>
+                                        <small style="color: #6c757d;">ID: BIZ003</small>
+                                    </td>
+                                    <td>
+                                        Lee Choon Huat<br>
+                                        <small>+60 16-234-5678</small><br>
+                                        <small>leech@email.com</small>
+                                    </td>
+                                    <td>
+                                        <span class="status-badge" style="background: #e8f5e8; color: #2e7d32;">Multi-Branch (RM299)</span><br>
+                                        <small>Next: Oct 1, 2024</small><br>
+                                        <small style="color: #28a745;">Paid</small>
+                                    </td>
+                                    <td>
+                                        <strong>5/∞</strong> Campaigns<br>
+                                        <strong>1,240/2000</strong> Customers<br>
+                                        <small>62% utilization</small>
+                                    </td>
+                                    <td><span class="status-badge status-active">Active</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline">Manage</button><br>
+                                        <button class="btn btn-sm" style="margin-top: 0.25rem;">Analytics</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Billing Tab -->
+            <div class="tab-content" id="billing-tab">
+                <div class="content-header">
+                    <h2>Billing & Subscriptions</h2>
+                    <p>Monitor payments and subscription status across all businesses</p>
+                </div>
+                <div class="content-body">
+                    <!-- Revenue Stats -->
+                    <div class="stats-grid">
+                        <div class="stat-card revenue">
+                            <i class="fas fa-coins stat-icon"></i>
+                            <div class="stat-value">RM 24,680</div>
+                            <div class="stat-label">This Month Revenue</div>
+                            <div class="stat-change"><i class="fas fa-arrow-up"></i> +12.5% vs last month</div>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-exclamation-triangle stat-icon"></i>
+                            <div class="stat-value">7</div>
+                            <div class="stat-label">Overdue Payments</div>
+                            <div class="stat-change"><i class="fas fa-clock"></i> Avg 5 days overdue</div>
+                        </div>
+                        <div class="stat-card customers">
+                            <i class="fas fa-credit-card stat-icon"></i>
+                            <div class="stat-value">95.2%</div>
+                            <div class="stat-label">Collection Rate</div>
+                            <div class="stat-change"><i class="fas fa-arrow-up"></i> +2.1% improvement</div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Issues -->
+                    <div class="table-container">
+                        <div class="table-header">
+                            <h3>Payment Issues Requiring Attention</h3>
+                            <button class="btn btn-sm">Send Reminders</button>
+                        </div>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Business</th>
+                                    <th>Plan</th>
+                                    <th>Amount Due</th>
+                                    <th>Days Overdue</th>
+                                    <th>Last Contact</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <strong>Nasi Lemak Mak Jah</strong><br>
+                                        <small>jaharah@email.com</small>
+                                    </td>
+                                    <td>Basic (RM99)</td>
+                                    <td><strong style="color: #dc3545;">RM 99.00</strong></td>
+                                    <td><span style="color: #dc3545;">12 days</span></td>
+                                    <td>Sep 1, 2024</td>
+                                    <td>
+                                        <button class="btn btn-sm">Call</button>
+                                        <button class="btn btn-sm btn-outline">Email</button>
+                                        <button class="btn btn-sm btn-danger">Suspend</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Mini Market Rahman</strong><br>
+                                        <small>rahman@email.com</small>
+                                    </td>
+                                    <td>Business (RM199)</td>
+                                    <td><strong style="color: #dc3545;">RM 199.00</strong></td>
+                                    <td><span style="color: #ffc107;">3 days</span></td>
+                                    <td>Sep 4, 2024</td>
+                                    <td>
+                                        <button class="btn btn-sm">Remind</button>
+                                        <button class="btn btn-sm btn-outline">Extend</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Revenue Chart -->
+                    <div class="chart-container">
+                        <div class="chart-placeholder">
+                            <i class="fas fa-chart-line" style="font-size: 3rem; margin-bottom: 1rem; color: #ced4da;"></i>
+                            <h4>Monthly Revenue Trends</h4>
+                            <p>Revenue breakdown by subscription tier and payment method analytics would be displayed here.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Support Tab -->
+            <div class="tab-content" id="support-tab">
+                <div class="content-header">
+                    <h2>Customer Support</h2>
+                    <p>Manage support tickets and customer inquiries</p>
+                </div>
+                <div class="content-body">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <i class="fas fa-ticket-alt stat-icon"></i>
+                            <div class="stat-value">23</div>
+                            <div class="stat-label">Open Tickets</div>
+                            <div class="stat-change"><i class="fas fa-arrow-down"></i> -5 from yesterday</div>
+                        </div>
+                        <div class="stat-card customers">
+                            <i class="fas fa-clock stat-icon"></i>
+                            <div class="stat-value">2.3h</div>
+                            <div class="stat-label">Avg Response Time</div>
+                            <div class="stat-change"><i class="fas fa-target"></i> Target: 4h</div>
+                        </div>
+                        <div class="stat-card revenue">
+                            <i class="fas fa-thumbs-up stat-icon"></i>
+                            <div class="stat-value">96%</div>
+                            <div class="stat-label">Satisfaction Rate</div>
+                            <div class="stat-change"><i class="fas fa-star"></i> 4.8/5.0 rating</div>
+                        </div>
+                    </div>
+
+                    <div class="table-container">
+                        <div class="table-header">
+                            <h3>Recent Support Tickets</h3>
+                            <button class="btn btn-sm">View All</button>
+                        </div>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Ticket #</th>
+                                    <th>Business</th>
+                                    <th>Issue</th>
+                                    <th>Priority</th>
+                                    <th>Status</th>
+                                    <th>Assigned</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>#T-001</td>
+                                    <td>Kedai Kopi Ah Lim</td>
+                                    <td>QR code not working for customers</td>
+                                    <td><span class="status-badge" style="background: #ffebee; color: #c62828;">High</span></td>
+                                    <td><span class="status-badge status-pending">In Progress</span></td>
+                                    <td>Tech Team</td>
+                                    <td>
+                                        <button class="btn btn-sm">View</button>
+                                        <button class="btn btn-sm btn-success">Resolve</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#T-002</td>
+                                    <td>Beauty Salon Siti</td>
+                                    <td>Request to upgrade to Business plan</td>
+                                    <td><span class="status-badge" style="background: #f3e5f5; color: #6a1b9a;">Medium</span></td>
+                                    <td><span class="status-badge status-active">New</span></td>
+                                    <td>Sales Team</td>
+                                    <td>
+                                        <button class="btn btn-sm">Assign</button>
+                                        <button class="btn btn-sm btn-outline">Contact</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Tab -->
+            <div class="tab-content" id="analytics-tab">
+                <div class="content-header">
+                    <h2>Platform Analytics</h2>
+                    <p>Detailed insights into platform performance and user behavior</p>
+                </div>
+                <div class="content-body">
+                    <div class="chart-container">
+                        <div class="chart-placeholder">
+                            <i class="fas fa-chart-bar" style="font-size: 3rem; margin-bottom: 1rem; color: #ced4da;"></i>
+                            <h4>Business Performance Analytics</h4>
+                            <p>Interactive dashboards showing customer engagement, retention rates, transaction volumes, and business growth metrics across different industry segments would be displayed here.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Customers Tab -->
+            <div class="tab-content" id="customers-tab">
+                <div class="content-header">
+                    <h2>Customer Insights</h2>
+                    <p>Overview of customer behavior across all businesses</p>
+                </div>
+                <div class="content-body">
+                    <div class="stats-grid">
+                        <div class="stat-card customers">
+                            <i class="fas fa-users stat-icon"></i>
+                            <div class="stat-value">15,420</div>
+                            <div class="stat-label">Total Customers</div>
+                            <div class="stat-change"><i class="fas fa-arrow-up"></i> +1,240 this month</div>
+                        </div>
+                        <div class="stat-card revenue">
+                            <i class="fas fa-user-plus stat-icon"></i>
+                            <div class="stat-value">827</div>
+                            <div class="stat-label">New This Month</div>
+                            <div class="stat-change"><i class="fas fa-percentage"></i> +15.2% growth</div>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-mobile-alt stat-icon"></i>
+                            <div class="stat-value">89%</div>
+                            <div class="stat-label">Mobile Usage</div>
+                            <div class="stat-change"><i class="fas fa-info-circle"></i> iOS 52%, Android 37%</div>
+                        </div>
+                    </div>
+
+                    <div class="chart-container">
+                        <div class="chart-placeholder">
+                            <i class="fas fa-user-chart" style="font-size: 3rem; margin-bottom: 1rem; color: #ced4da;"></i>
+                            <h4>Customer Demographics & Behavior</h4>
+                            <p>Age distribution, location mapping, loyalty program engagement, and cross-business customer insights would be displayed here.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab Management
+        function showTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active from all nav links
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName + '-tab').classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Business Management
+        function manageBusiness(businessId) {
+            alert(`Managing business ${businessId}:\n\n` +
+                  `• View detailed analytics\n` +
+                  `• Manage campaigns and settings\n` +
+                  `• Review customer feedback\n` +
+                  `• Access support history\n` +
+                  `• Export data and reports\n\n` +
+                  `This would open the detailed business management interface.`);
+        }
+
+        // Demo Data Updates
+        document.addEventListener('DOMContentLoaded', function() {
+            // Simulate real-time updates
+            setInterval(function() {
+                // Update notification badge randomly
+                const badge = document.querySelector('.notification-badge');
+                const count = Math.floor(Math.random() * 10);
+                badge.textContent = count;
+                badge.style.display = count > 0 ? 'flex' : 'none';
+            }, 30000);
+        });
+
+        // Search functionality placeholder
+        document.querySelectorAll('.search-input').forEach(input => {
+            input.addEventListener('keyup', function() {
+                if (this.value.length > 0) {
+                    console.log('Searching for:', this.value);
+                    // Implement search functionality
+                }
+            });
+        });
+    </script>
+</body>
+</html>

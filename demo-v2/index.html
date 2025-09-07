@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LoyalTea Customer Journey Demo v2.0</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f7;
+            color: #1d1d1f;
+            line-height: 1.6;
+        }
+
+        .demo-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .demo-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .demo-header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .demo-navigation {
+            background: white;
+            padding: 1rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: #667eea;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border: 2px solid #667eea;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .demo-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .step-section {
+            background: white;
+            margin: 2rem 0;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .step-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .step-content {
+            padding: 2rem;
+        }
+
+        .phone-frame {
+            width: 300px;
+            height: 600px;
+            background: #1d1d1f;
+            border-radius: 25px;
+            padding: 20px;
+            margin: 2rem auto;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .phone-screen {
+            width: 100%;
+            height: 100%;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .status-bar {
+            background: #f8f9fa;
+            height: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 15px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .tenant-header {
+            background: linear-gradient(135deg, #8B4513 0%, #D2691E 100%);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .tenant-logo {
+            width: 60px;
+            height: 60px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .form-group {
+            margin: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            width: 100%;
+            margin: 1rem;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+            padding: 0.75rem 2rem;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0.5rem;
+        }
+
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .wallet-card {
+            background: linear-gradient(135deg, #8B4513 0%, #D2691E 100%);
+            color: white;
+            margin: 1rem;
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .card-header {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .stamps-display {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .stamp {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .stamp.filled {
+            background: #FFD700;
+            color: #8B4513;
+        }
+
+        .stamp.empty {
+            background: rgba(255,255,255,0.3);
+            color: rgba(255,255,255,0.7);
+        }
+
+        .qr-code {
+            width: 80px;
+            height: 80px;
+            background: white;
+            margin: 1rem auto;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+        }
+
+        .campaign-selector {
+            background: #f8f9fa;
+            margin: 1rem;
+            border-radius: 12px;
+            padding: 1rem;
+        }
+
+        .campaign-option {
+            background: white;
+            margin: 0.5rem 0;
+            padding: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .campaign-option:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .campaign-option.selected {
+            border-color: #667eea;
+            background: #f0f2ff;
+        }
+
+        .success-animation {
+            text-align: center;
+            padding: 2rem;
+            display: none;
+        }
+
+        .success-animation.show {
+            display: block;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .checkmark {
+            width: 60px;
+            height: 60px;
+            background: #4CAF50;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .demo-notes {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-left: 4px solid #667eea;
+            margin-top: 1rem;
+        }
+
+        .demo-notes h4 {
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: #e1e5e9;
+            border-radius: 2px;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 2px;
+            transition: width 0.5s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        @media (max-width: 768px) {
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-links {
+                gap: 1rem;
+            }
+            
+            .demo-header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-header">
+        <h1>🎯 LoyalTea Customer Journey Demo v2.0</h1>
+        <p>Multi-tenant loyalty platform with campaign-based system</p>
+        <div style="margin-top: 1rem;">
+            <small>Based on FINAL architecture: dashboard.loyaltea.my + app.loyaltea.my</small>
+        </div>
+    </div>
+
+    <div class="demo-navigation">
+        <div class="nav-links">
+            <a href="owner-dashboard.html">👨‍💼 Owner Dashboard</a>
+            <a href="staff-scanner.html">📱 Staff Scanner</a>
+            <a href="superadmin-dashboard.html">⚙️ Superadmin</a>
+            <a href="card-types-showcase.html">💳 Card Types</a>
+        </div>
+    </div>
+
+    <div class="demo-container">
+        <!-- Step 1: QR Code Landing Page -->
+        <div class="step-section" id="step-1">
+            <div class="step-header">
+                <div class="step-number">1</div>
+                <div>
+                    <h2>QR Code Landing Page</h2>
+                    <p>Customer scans QR at Kedai Kopi Ah Beng counter</p>
+                </div>
+            </div>
+            <div class="step-content">
+                <div class="two-column">
+                    <div>
+                        <h3>URL Structure (New v2.0 Architecture)</h3>
+                        <p><strong>QR Code redirects to:</strong></p>
+                        <code style="background: #f0f0f0; padding: 0.5rem; border-radius: 4px; display: block; margin: 1rem 0;">
+                            app.loyaltea.my/kedaiA/customer
+                        </code>
+                        <p><em>Alternative format:</em></p>
+                        <code style="background: #f0f0f0; padding: 0.5rem; border-radius: 4px; display: block; margin: 1rem 0;">
+                            app.loyaltea.my/customer?tenant=kedaiA
+                        </code>
+                        
+                        <div class="demo-notes">
+                            <h4>🏗️ Architecture Notes</h4>
+                            <ul>
+                                <li><strong>Tenant Resolution:</strong> Path-based multi-tenancy</li>
+                                <li><strong>No Subdomains:</strong> Simple 2-domain structure</li>
+                                <li><strong>Branding:</strong> Tenant-specific styling loaded dynamically</li>
+                                <li><strong>Campaigns:</strong> Business can have multiple loyalty cards</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="phone-frame">
+                        <div class="phone-screen">
+                            <div class="status-bar">
+                                <span>9:41 AM</span>
+                                <span>📶 📶 📶 📶 🔋 100%</span>
+                            </div>
+                            <div class="tenant-header">
+                                <div class="tenant-logo">☕</div>
+                                <h2>KEDAI KOPI AH BENG</h2>
+                                <p style="font-size: 0.9rem; opacity: 0.9;">Semenyih, Selangor</p>
+                            </div>
+                            <div style="padding: 1.5rem; text-align: center;">
+                                <h3 style="color: #333; margin-bottom: 1rem;">Welcome to Our Loyalty Program! 🎉</h3>
+                                
+                                <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                                    <h4 style="color: #8B4513;">☕ Coffee Stamp Card</h4>
+                                    <p style="font-size: 0.9rem; color: #666;">Collect 10 stamps, get 1 FREE premium coffee!</p>
+                                </div>
+                                
+                                <div style="margin: 1.5rem 0; color: #666;">
+                                    <p>💳 Added directly to your phone wallet</p>
+                                    <p>📱 No app download needed</p>
+                                    <p>⚡ Quick 30-second signup</p>
+                                </div>
+                                
+                                <button class="btn-secondary" style="width: 80%; margin: 0.5rem 0;">🔑 LOGIN</button>
+                                <button class="btn-primary" style="width: 80%; margin: 0.5rem 0;" onclick="goToStep(2)">🚀 JOIN NOW - IT'S FREE!</button>
+                                
+                                <p style="font-size: 0.8rem; color: #999; margin-top: 1rem;">
+                                    📞 Questions? WhatsApp: 019-123-4567
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 2: Registration Form -->
+        <div class="step-section" id="step-2" style="display: none;">
+            <div class="step-header">
+                <div class="step-number">2</div>
+                <div>
+                    <h2>Customer Registration</h2>
+                    <p>Simple form optimized for Malaysian users</p>
+                </div>
+            </div>
+            <div class="step-content">
+                <div class="two-column">
+                    <div>
+                        <h3>Registration Features</h3>
+                        <ul style="margin: 1rem 0;">
+                            <li><strong>Malaysian Phone Format:</strong> +60 prefix, local validation</li>
+                            <li><strong>Minimal Data:</strong> Only essential information collected</li>
+                            <li><strong>PDPA Compliance:</strong> Clear consent checkboxes</li>
+                            <li><strong>WhatsApp Opt-in:</strong> Popular in Malaysia for business communication</li>
+                        </ul>
+                        
+                        <div class="demo-notes">
+                            <h4>🔒 Privacy & Compliance</h4>
+                            <ul>
+                                <li><strong>PDPA Compliant:</strong> Clear purpose statement</li>
+                                <li><strong>Data Minimization:</strong> Collect only what's needed</li>
+                                <li><strong>Consent Management:</strong> Granular opt-in options</li>
+                                <li><strong>Right to Erasure:</strong> Account deletion available</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="phone-frame">
+                        <div class="phone-screen">
+                            <div class="status-bar">
+                                <span>9:42 AM</span>
+                                <span>📶 📶 📶 📶 🔋 99%</span>
+                            </div>
+                            <div class="tenant-header" style="padding: 1rem;">
+                                <h3>📝 Join Coffee Loyalty Card</h3>
+                                <p style="font-size: 0.9rem;">🏪 Kedai Kopi Ah Beng</p>
+                            </div>
+                            <div style="padding: 0;">
+                                <div class="form-group">
+                                    <label>Full Name</label>
+                                    <input type="text" placeholder="Ahmad Rahman" value="">
+                                </div>
+                                <div class="form-group">
+                                    <label>Phone Number 🇲🇾</label>
+                                    <input type="tel" placeholder="019-123-4567" value="">
+                                </div>
+                                <div class="form-group">
+                                    <label>Email Address</label>
+                                    <input type="email" placeholder="ahmad@example.com" value="">
+                                </div>
+                                <div class="form-group">
+                                    <label>Birthday (for special offers)</label>
+                                    <input type="date" value="">
+                                </div>
+                                
+                                <div style="padding: 1rem; background: #f8f9fa; margin: 1rem;">
+                                    <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;">
+                                        <input type="checkbox" checked>
+                                        ☑️ I want special offers via WhatsApp
+                                    </label>
+                                    <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; margin-top: 0.5rem;">
+                                        <input type="checkbox" checked>
+                                        ☑️ I agree to terms & conditions
+                                    </label>
+                                </div>
+                                
+                                <button class="btn-primary" onclick="goToStep(3)">CREATE MY CARD</button>
+                                
+                                <p style="text-align: center; font-size: 0.8rem; color: #666; margin: 1rem;">
+                                    🔒 Your info is safe and secure<br>
+                                    📱 Takes 30 seconds, works immediately
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 3: Campaign Selection (Business Tier Feature) -->
+        <div class="step-section" id="step-3" style="display: none;">
+            <div class="step-header">
+                <div class="step-number">3</div>
+                <div>
+                    <h2>Campaign Selection</h2>
+                    <p>Multiple loyalty programs (Business tier feature)</p>
+                </div>
+            </div>
+            <div class="step-content">
+                <div class="two-column">
+                    <div>
+                        <h3>Multi-Campaign System</h3>
+                        <p>This demo shows a <strong>Business tier</strong> customer (RM199/month) that has multiple campaigns running simultaneously.</p>
+                        
+                        <div style="background: #e3f2fd; padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                            <h4>📊 Tier Comparison</h4>
+                            <ul>
+                                <li><strong>Basic (RM99):</strong> 1 campaign only</li>
+                                <li><strong>Business (RM199):</strong> 3 campaigns (shown here)</li>
+                                <li><strong>Multi-Branch (RM299):</strong> 3 branches, unlimited campaigns</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="demo-notes">
+                            <h4>🎯 Business Logic</h4>
+                            <ul>
+                                <li><strong>Campaign Flexibility:</strong> Different rewards for different customer types</li>
+                                <li><strong>Staff Management:</strong> Employee badges for internal use</li>
+                                <li><strong>Seasonal Campaigns:</strong> Limited-time promotions</li>
+                                <li><strong>Customer Choice:</strong> Join one or multiple programs</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="phone-frame">
+                        <div class="phone-screen">
+                            <div class="status-bar">
+                                <span>9:43 AM</span>
+                                <span>📶 📶 📶 📶 🔋 98%</span>
+                            </div>
+                            <div class="tenant-header" style="padding: 1rem;">
+                                <h3>🎯 Choose Your Programs</h3>
+                                <p style="font-size: 0.9rem;">You can join multiple loyalty programs!</p>
+                            </div>
+                            <div class="campaign-selector">
+                                <div class="campaign-option selected">
+                                    <h4 style="color: #8B4513;">☕ Coffee Stamp Card</h4>
+                                    <p style="font-size: 0.9rem; color: #666;">Collect 10 stamps, get 1 FREE premium coffee</p>
+                                    <small style="color: #4CAF50;">✓ Selected</small>
+                                </div>
+                                
+                                <div class="campaign-option">
+                                    <h4 style="color: #9C27B0;">👑 VIP Membership</h4>
+                                    <p style="font-size: 0.9rem; color: #666;">Gold tier: 15% discount + priority service</p>
+                                    <small style="color: #666;">Click to join</small>
+                                </div>
+                                
+                                <div class="campaign-option">
+                                    <h4 style="color: #FF5722;">🧧 Chinese New Year Special</h4>
+                                    <p style="font-size: 0.9rem; color: #666;">Limited time: Double stamps + special drinks</p>
+                                    <small style="color: #FF5722;">🔥 Limited time until 15 Feb</small>
+                                </div>
+                            </div>
+                            
+                            <div style="padding: 1rem; text-align: center;">
+                                <p style="font-size: 0.9rem; color: #666; margin-bottom: 1rem;">
+                                    You've selected 1 program. You can add more anytime!
+                                </p>
+                                <button class="btn-primary" onclick="goToStep(4)">CONTINUE TO WALLET</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 4: Wallet Integration -->
+        <div class="step-section" id="step-4" style="display: none;">
+            <div class="step-header">
+                <div class="step-number">4</div>
+                <div>
+                    <h2>Wallet Pass Generation</h2>
+                    <p>Apple & Google Wallet integration via Infyra infrastructure</p>
+                </div>
+            </div>
+            <div class="step-content">
+                <div class="two-column">
+                    <div>
+                        <h3>Infyra Wallet Infrastructure</h3>
+                        <p>All wallet passes are generated and signed using <strong>Infyra's Apple Developer account</strong> and <strong>Google Wallet credentials</strong>.</p>
+                        
+                        <div style="background: #f0f8ff; padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                            <h4>🔧 Technical Implementation</h4>
+                            <ul>
+                                <li><strong>Apple Wallet:</strong> .pkpass files signed with Infyra certificates</li>
+                                <li><strong>Google Wallet:</strong> JWT tokens with Infyra service account</li>
+                                <li><strong>Pass Type ID:</strong> pass.com.infyra.loyaltea</li>
+                                <li><strong>Universal QR:</strong> Same format for all card types</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="demo-notes">
+                            <h4>📱 User Experience</h4>
+                            <ul>
+                                <li><strong>Device Detection:</strong> Shows appropriate wallet option</li>
+                                <li><strong>Fallback Support:</strong> Web card if wallet fails</li>
+                                <li><strong>Real-time Updates:</strong> Pass updates when staff scans</li>
+                                <li><strong>Offline Support:</strong> QR code works without internet</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="phone-frame">
+                        <div class="phone-screen">
+                            <div class="status-bar">
+                                <span>9:44 AM</span>
+                                <span>📶 📶 📶 📶 🔋 97%</span>
+                            </div>
+                            <div style="padding: 1.5rem; text-align: center;">
+                                <h3 style="color: #4CAF50; margin-bottom: 1rem;">✨ Your Coffee Card is Ready! ✨</h3>
+                                
+                                <div class="wallet-card">
+                                    <div class="card-header">
+                                        <div style="font-size: 0.9rem; opacity: 0.9;">KEDAI KOPI AH BENG</div>
+                                        <div style="font-size: 1.2rem; font-weight: bold; margin: 0.5rem 0;">COFFEE STAMP CARD</div>
+                                    </div>
+                                    
+                                    <div class="stamps-display">
+                                        <div class="stamp empty">⭐</div>
+                                        <div class="stamp empty">⭐</div>
+                                        <div class="stamp empty">⭐</div>
+                                        <div class="stamp empty">⭐</div>
+                                        <div class="stamp empty">⭐</div>
+                                        <div class="stamp empty">⭐</div>
+                                        <div class="stamp empty">⭐</div>
+                                        <div class="stamp empty">⭐</div>
+                                        <div class="stamp empty">⭐</div>
+                                        <div class="stamp empty">⭐</div>
+                                    </div>
+                                    
+                                    <div style="text-align: center; margin: 1rem 0;">
+                                        <div style="font-size: 1.1rem; font-weight: bold;">0 of 10 stamps</div>
+                                        <div style="font-size: 0.9rem; opacity: 0.9;">Next reward: Free Premium Coffee</div>
+                                    </div>
+                                    
+                                    <div class="qr-code">📱<br>QR</div>
+                                </div>
+                                
+                                <div style="margin: 1.5rem 0;">
+                                    <h4 style="color: #333; margin-bottom: 1rem;">📲 Add to your phone wallet:</h4>
+                                    
+                                    <button class="btn-primary" style="background: #000; margin: 0.5rem 0;" onclick="showAddToWallet('apple')">
+                                        📱 Add to Apple Wallet
+                                    </button>
+                                    
+                                    <button class="btn-primary" style="background: #4285f4; margin: 0.5rem 0;" onclick="showAddToWallet('google')">
+                                        📱 Add to Google Wallet
+                                    </button>
+                                    
+                                    <div style="margin: 1rem 0; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
+                                        <p style="font-size: 0.9rem; color: #666;">🔄 Can't add to wallet right now?</p>
+                                        <button class="btn-secondary" style="font-size: 0.9rem; padding: 0.5rem 1rem;" onclick="goToStep(5)">📋 View Web Version</button>
+                                    </div>
+                                </div>
+                                
+                                <div style="display: flex; gap: 0.5rem; justify-content: center;">
+                                    <button class="btn-secondary" style="font-size: 0.8rem; padding: 0.4rem 0.8rem;">📧 Email Link</button>
+                                    <button class="btn-secondary" style="font-size: 0.8rem; padding: 0.4rem 0.8rem;">💬 WhatsApp Link</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 5: Customer Dashboard -->
+        <div class="step-section" id="step-5" style="display: none;">
+            <div class="step-header">
+                <div class="step-number">5</div>
+                <div>
+                    <h2>Customer Dashboard (Web Fallback)</h2>
+                    <p>Web version for wallet fallback and account management</p>
+                </div>
+            </div>
+            <div class="step-content">
+                <div class="two-column">
+                    <div>
+                        <h3>Web Dashboard Features</h3>
+                        <p>Provides full functionality when wallet integration isn't available or customer wants to manage their account.</p>
+                        
+                        <div style="background: #e8f5e8; padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                            <h4>🌟 Key Features</h4>
+                            <ul>
+                                <li><strong>Loyalty Progress:</strong> Real-time stamp/points tracking</li>
+                                <li><strong>Transaction History:</strong> Complete visit record</li>
+                                <li><strong>Re-add to Wallet:</strong> Download wallet pass again</li>
+                                <li><strong>Multiple Campaigns:</strong> Manage all loyalty programs</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="demo-notes">
+                            <h4>📱 Mobile Responsive</h4>
+                            <ul>
+                                <li><strong>Mobile-First Design:</strong> Optimized for Malaysian smartphone usage</li>
+                                <li><strong>Offline QR Display:</strong> Show QR code even without wallet</li>
+                                <li><strong>WhatsApp Integration:</strong> Contact support directly</li>
+                                <li><strong>Progressive Web App:</strong> Can be added to home screen</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="phone-frame">
+                        <div class="phone-screen">
+                            <div class="status-bar">
+                                <span>9:45 AM</span>
+                                <span>📶 📶 📶 📶 🔋 96%</span>
+                            </div>
+                            <div class="tenant-header" style="padding: 1rem;">
+                                <h3>👋 Welcome, Ahmad!</h3>
+                                <p style="font-size: 0.9rem;">🏪 Kedai Kopi Ah Beng</p>
+                            </div>
+                            <div style="padding: 1rem;">
+                                <div class="wallet-card" style="margin: 0 0 1rem 0;">
+                                    <div class="card-header">
+                                        <div style="font-size: 1rem; font-weight: bold;">☕ Your Coffee Card</div>
+                                    </div>
+                                    
+                                    <div class="stamps-display" style="margin: 1rem 0;">
+                                        <div class="stamp filled">⭐</div>
+                                        <div class="stamp filled">⭐</div>
+                                        <div class="stamp filled">⭐</div>
+                                        <div class="stamp filled">⭐</div>
+                                        <div class="stamp filled">⭐</div>
+                                        <div class="stamp filled">⭐</div>
+                                        <div class="stamp filled">⭐</div>
+                                        <div class="stamp empty">⭐</div>
+                                        <div class="stamp empty">⭐</div>
+                                        <div class="stamp empty">⭐</div>
+                                    </div>
+                                    
+                                    <div style="text-align: center;">
+                                        <div style="font-size: 1.1rem; font-weight: bold;">7 of 10 stamps collected</div>
+                                        <div style="font-size: 0.9rem; opacity: 0.9;">🎯 3 more stamps for FREE COFFEE! 🎉</div>
+                                    </div>
+                                </div>
+                                
+                                <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                                    <h4 style="color: #333; margin-bottom: 0.5rem;">📊 Your Progress:</h4>
+                                    <ul style="font-size: 0.9rem; color: #666;">
+                                        <li>Member since: Dec 2023</li>
+                                        <li>Total visits: 15</li>
+                                        <li>Stamps earned: 27</li>
+                                        <li>Free coffees enjoyed: 2</li>
+                                    </ul>
+                                </div>
+                                
+                                <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                                    <h4 style="color: #333; margin-bottom: 0.5rem;">🕐 Recent Visits:</h4>
+                                    <ul style="font-size: 0.9rem; color: #666;">
+                                        <li>+1 stamp - Today, 9:30 AM</li>
+                                        <li>+1 stamp - 2 days ago</li>
+                                        <li>FREE COFFEE claimed - 1 week ago</li>
+                                    </ul>
+                                </div>
+                                
+                                <div style="text-align: center; margin: 1rem 0;">
+                                    <button class="btn-primary" style="width: 100%; margin: 0.5rem 0;" onclick="goToStep(6)">📱 Add to Wallet Again</button>
+                                    <button class="btn-secondary" style="width: 100%; margin: 0.5rem 0;">📋 View All History</button>
+                                </div>
+                                
+                                <p style="text-align: center; font-size: 0.8rem; color: #666;">
+                                    Lost your wallet card? <span style="color: #667eea;">Re-download Here</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 6: Staff Scanning Demo -->
+        <div class="step-section" id="step-6" style="display: none;">
+            <div class="step-header">
+                <div class="step-number">6</div>
+                <div>
+                    <h2>Staff QR Scanning</h2>
+                    <p>How staff process loyalty transactions</p>
+                </div>
+            </div>
+            <div class="step-content">
+                <div class="two-column">
+                    <div>
+                        <h3>Staff Workflow</h3>
+                        <p>Simple, fast workflow optimized for Malaysian SME staff with minimal training required.</p>
+                        
+                        <div style="background: #fff3cd; padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                            <h4>⚡ Speed & Simplicity</h4>
+                            <ul>
+                                <li><strong>6-second average:</strong> Scan to completion</li>
+                                <li><strong>Large buttons:</strong> Easy for any age staff</li>
+                                <li><strong>Clear feedback:</strong> Visual and audio confirmation</li>
+                                <li><strong>Minimal training:</strong> 15-minute onboarding sufficient</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="demo-notes">
+                            <h4>🔐 Security Features</h4>
+                            <ul>
+                                <li><strong>Signed QR Codes:</strong> Cryptographic verification prevents fraud</li>
+                                <li><strong>Timestamp Validation:</strong> QR codes expire after 24 hours</li>
+                                <li><strong>Business Context:</strong> Staff can only access their tenant's customers</li>
+                                <li><strong>Transaction Logging:</strong> Complete audit trail for all activities</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="phone-frame">
+                        <div class="phone-screen">
+                            <div class="status-bar">
+                                <span>2:30 PM</span>
+                                <span>📶 📶 📶 📶 🔋 85%</span>
+                            </div>
+                            <div style="background: #8B4513; color: white; padding: 1rem; text-align: center;">
+                                <h3>👤 Ahmad Rahman - Staff</h3>
+                                <p style="font-size: 0.9rem; opacity: 0.9;">Processing customer loyalty</p>
+                            </div>
+                            <div style="padding: 1rem;">
+                                <div style="background: #f0f8ff; padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                                    <h4 style="color: #333;">👤 Aminah Salleh</h4>
+                                    <p style="font-size: 0.9rem; color: #666;">📱 019-234-5678</p>
+                                </div>
+                                
+                                <div class="wallet-card" style="margin: 1rem 0;">
+                                    <div style="text-align: center;">
+                                        <h4>☕ Coffee Stamp Card</h4>
+                                        <div class="stamps-display">
+                                            <div class="stamp filled">⭐</div>
+                                            <div class="stamp filled">⭐</div>
+                                            <div class="stamp filled">⭐</div>
+                                            <div class="stamp filled">⭐</div>
+                                            <div class="stamp filled">⭐</div>
+                                            <div class="stamp filled">⭐</div>
+                                            <div class="stamp filled">⭐</div>
+                                            <div class="stamp empty">⭐</div>
+                                            <div class="stamp empty">⭐</div>
+                                            <div class="stamp empty">⭐</div>
+                                        </div>
+                                        <div style="margin: 1rem 0;">
+                                            <div style="font-size: 1.1rem; font-weight: bold;">7 of 10 stamps collected</div>
+                                            <div style="font-size: 0.9rem; opacity: 0.9;">🎯 3 more stamps for FREE COFFEE!</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                                    <div style="display: flex; justify-content: space-between; font-size: 0.9rem; color: #666;">
+                                        <span>📅 Member since: Dec 2023</span>
+                                        <span>🏆 Total stamps: 27</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; font-size: 0.9rem; color: #666; margin-top: 0.5rem;">
+                                        <span>🎁 Rewards claimed: 2</span>
+                                        <span>📍 Last visit: 2 days ago</span>
+                                    </div>
+                                </div>
+                                
+                                <button class="btn-primary" style="width: 100%; font-size: 1.2rem; margin: 1rem 0;" onclick="addStamp()">
+                                    + ADD STAMP
+                                </button>
+                                
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <button class="btn-secondary" style="flex: 1; font-size: 0.9rem;">View History</button>
+                                    <button class="btn-secondary" style="flex: 1; font-size: 0.9rem;">Done</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 7: Transaction Success -->
+        <div class="step-section" id="step-7" style="display: none;">
+            <div class="step-header">
+                <div class="step-number">7</div>
+                <div>
+                    <h2>Transaction Success</h2>
+                    <p>Real-time wallet update and customer notification</p>
+                </div>
+            </div>
+            <div class="step-content">
+                <div class="two-column">
+                    <div>
+                        <h3>Real-time Updates</h3>
+                        <p>When staff adds a stamp, the customer's wallet pass updates immediately through Apple Push Notification Service (APNS) and Google's update system.</p>
+                        
+                        <div style="background: #e8f5e8; padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                            <h4>📱 Technical Flow</h4>
+                            <ol>
+                                <li><strong>Staff Action:</strong> Taps "Add Stamp" button</li>
+                                <li><strong>Database Update:</strong> Customer progress updated</li>
+                                <li><strong>Push Notification:</strong> Sent to customer's device</li>
+                                <li><strong>Wallet Refresh:</strong> Pass updates automatically</li>
+                                <li><strong>Confirmation:</strong> Both parties see success message</li>
+                            </ol>
+                        </div>
+                        
+                        <div class="demo-notes">
+                            <h4>⚡ Performance Benefits</h4>
+                            <ul>
+                                <li><strong>Instant Feedback:</strong> Customers see immediate progress</li>
+                                <li><strong>No Re-scanning:</strong> Updates happen automatically</li>
+                                <li><strong>Offline Support:</strong> Updates sync when back online</li>
+                                <li><strong>Cross-platform:</strong> Works on iPhone and Android</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="phone-frame">
+                        <div class="phone-screen">
+                            <div class="status-bar">
+                                <span>2:31 PM</span>
+                                <span>📶 📶 📶 📶 🔋 84%</span>
+                            </div>
+                            <div id="success-screen" style="padding: 2rem; text-align: center;">
+                                <div class="success-animation show">
+                                    <div class="checkmark">✓</div>
+                                    <h3 style="color: #4CAF50; margin-bottom: 1rem;">Stamp Added Successfully! 🎉</h3>
+                                    
+                                    <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                                        <h4 style="color: #333;">Customer: Aminah Salleh</h4>
+                                        <p style="font-size: 1.1rem; color: #4CAF50; font-weight: bold;">New Progress: 8 of 10 stamps</p>
+                                        <p style="color: #FF9800; font-weight: bold;">🎯 Just 2 more stamps for FREE COFFEE!</p>
+                                    </div>
+                                    
+                                    <div style="background: #e3f2fd; padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                                        <p style="font-size: 0.9rem; color: #666;">📱 Customer's wallet has been updated automatically</p>
+                                        <p style="font-size: 0.8rem; color: #999;">Push notification sent • Pass refreshed</p>
+                                    </div>
+                                    
+                                    <button class="btn-primary" onclick="goToStep(8)">📱 Scan Next Customer</button>
+                                    
+                                    <div style="background: #f0f8ff; padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                                        <p style="font-size: 0.8rem; color: #666;">⏱️ Transaction completed in 6 seconds</p>
+                                        <p style="font-size: 0.8rem; color: #666;">🎯 Customer satisfaction: Excellent</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 8: Updated Wallet Display -->
+        <div class="step-section" id="step-8" style="display: none;">
+            <div class="step-header">
+                <div class="step-number">8</div>
+                <div>
+                    <h2>Updated Customer Wallet</h2>
+                    <p>Customer sees updated progress in their phone wallet</p>
+                </div>
+            </div>
+            <div class="step-content">
+                <div class="two-column">
+                    <div>
+                        <h3>Customer Experience</h3>
+                        <p>The customer's iPhone/Android wallet now shows the updated loyalty card with the new stamp automatically added.</p>
+                        
+                        <div style="background: #e8f5e8; padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                            <h4>🌟 Customer Benefits</h4>
+                            <ul>
+                                <li><strong>Immediate Gratification:</strong> See progress instantly</li>
+                                <li><strong>No Action Required:</strong> Updates happen automatically</li>
+                                <li><strong>Visual Progress:</strong> Clear stamp representation</li>
+                                <li><strong>Motivation:</strong> Shows how close they are to reward</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="background: #fff3cd; padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                            <h4>🔄 Complete Journey Summary</h4>
+                            <ol>
+                                <li>Customer scans QR code at store ✓</li>
+                                <li>Registers for loyalty program ✓</li>
+                                <li>Adds card to phone wallet ✓</li>
+                                <li>Visits store and gets stamps ✓</li>
+                                <li>Sees real-time progress ✓</li>
+                                <li>Earns rewards automatically ✓</li>
+                            </ol>
+                        </div>
+                        
+                        <div class="demo-notes">
+                            <h4>📈 Business Impact</h4>
+                            <ul>
+                                <li><strong>Customer Retention:</strong> 25% increase in repeat visits</li>
+                                <li><strong>Transaction Value:</strong> 15% higher average spend</li>
+                                <li><strong>Staff Efficiency:</strong> 50% faster than paper cards</li>
+                                <li><strong>Data Insights:</strong> Complete customer behavior analytics</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="phone-frame">
+                        <div class="phone-screen" style="background: #000;">
+                            <div style="color: white; padding: 1rem; text-align: center;">
+                                <h4 style="margin-bottom: 1rem;">📱 iPhone Wallet</h4>
+                                
+                                <div style="background: linear-gradient(135deg, #8B4513 0%, #D2691E 100%); border-radius: 12px; padding: 1.5rem; margin: 1rem 0; color: white;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                                        <div>
+                                            <div style="font-size: 0.8rem; opacity: 0.9;">KEDAI KOPI AH BENG</div>
+                                            <div style="font-size: 0.7rem; opacity: 0.7;">Semenyih, Selangor</div>
+                                        </div>
+                                        <div style="width: 40px; height: 40px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                            ☕
+                                        </div>
+                                    </div>
+                                    
+                                    <div style="text-align: center; margin: 1rem 0;">
+                                        <div style="font-size: 1rem; font-weight: bold;">COFFEE STAMP CARD</div>
+                                    </div>
+                                    
+                                    <div style="display: flex; justify-content: center; gap: 4px; margin: 1rem 0;">
+                                        <div style="width: 20px; height: 20px; background: #FFD700; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #8B4513;">⭐</div>
+                                        <div style="width: 20px; height: 20px; background: #FFD700; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #8B4513;">⭐</div>
+                                        <div style="width: 20px; height: 20px; background: #FFD700; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #8B4513;">⭐</div>
+                                        <div style="width: 20px; height: 20px; background: #FFD700; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #8B4513;">⭐</div>
+                                        <div style="width: 20px; height: 20px; background: #FFD700; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #8B4513;">⭐</div>
+                                        <div style="width: 20px; height: 20px; background: #FFD700; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #8B4513;">⭐</div>
+                                        <div style="width: 20px; height: 20px; background: #FFD700; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #8B4513;">⭐</div>
+                                        <div style="width: 20px; height: 20px; background: #FFD700; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #8B4513; animation: pulse 1s infinite;">⭐</div>
+                                        <div style="width: 20px; height: 20px; background: rgba(255,255,255,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px;">⭐</div>
+                                        <div style="width: 20px; height: 20px; background: rgba(255,255,255,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px;">⭐</div>
+                                    </div>
+                                    
+                                    <div style="text-align: center;">
+                                        <div style="font-size: 1.1rem; font-weight: bold;">8 of 10 stamps</div>
+                                        <div style="font-size: 0.8rem; opacity: 0.9;">2 more for FREE COFFEE! 🎉</div>
+                                    </div>
+                                    
+                                    <div style="background: white; width: 60px; height: 60px; margin: 1rem auto; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #333;">
+                                        📱<br>QR
+                                    </div>
+                                    
+                                    <div style="text-align: center; font-size: 0.7rem; opacity: 0.7;">
+                                        Show to staff when ordering
+                                    </div>
+                                </div>
+                                
+                                <div style="background: #1a1a1a; padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                                    <p style="font-size: 0.9rem; color: #4CAF50;">✓ Updated just now</p>
+                                    <p style="font-size: 0.8rem; color: #ccc;">Push notification received</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Demo Navigation -->
+        <div style="text-align: center; margin: 3rem 0;">
+            <h3>🎯 Demo Navigation</h3>
+            <div style="display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; margin: 2rem 0;">
+                <button class="btn-secondary" onclick="goToStep(1)">1. Landing Page</button>
+                <button class="btn-secondary" onclick="goToStep(2)">2. Registration</button>
+                <button class="btn-secondary" onclick="goToStep(3)">3. Campaigns</button>
+                <button class="btn-secondary" onclick="goToStep(4)">4. Wallet Gen</button>
+                <button class="btn-secondary" onclick="goToStep(5)">5. Dashboard</button>
+                <button class="btn-secondary" onclick="goToStep(6)">6. Staff Scan</button>
+                <button class="btn-secondary" onclick="goToStep(7)">7. Success</button>
+                <button class="btn-secondary" onclick="goToStep(8)">8. Updated Wallet</button>
+            </div>
+            
+            <div style="background: #f0f8ff; padding: 2rem; border-radius: 12px; margin: 2rem 0;">
+                <h4>🚀 Explore More Demos</h4>
+                <div style="display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; margin: 1rem 0;">
+                    <a href="owner-dashboard.html" class="btn-primary" style="text-decoration: none;">👨‍💼 Business Owner Interface</a>
+                    <a href="staff-scanner.html" class="btn-primary" style="text-decoration: none;">📱 Staff Scanner Demo</a>
+                    <a href="superadmin-dashboard.html" class="btn-primary" style="text-decoration: none;">⚙️ Superadmin Dashboard</a>
+                    <a href="card-types-showcase.html" class="btn-primary" style="text-decoration: none;">💳 All Card Types</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        
+        function goToStep(step) {
+            // Hide all steps
+            for (let i = 1; i <= 8; i++) {
+                const stepElement = document.getElementById(`step-${i}`);
+                if (stepElement) {
+                    stepElement.style.display = 'none';
+                }
+            }
+            
+            // Show target step
+            const targetStep = document.getElementById(`step-${step}`);
+            if (targetStep) {
+                targetStep.style.display = 'block';
+                targetStep.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+            
+            currentStep = step;
+            
+            // Update progress if applicable
+            updateProgress(step);
+        }
+        
+        function updateProgress(step) {
+            const progressFills = document.querySelectorAll('.progress-fill');
+            progressFills.forEach(fill => {
+                const progress = (step / 8) * 100;
+                fill.style.width = `${progress}%`;
+            });
+        }
+        
+        function showAddToWallet(type) {
+            const message = type === 'apple' 
+                ? '📱 Opening Apple Wallet...\n✅ Pass added successfully!'
+                : '📱 Opening Google Wallet...\n✅ Pass added successfully!';
+            
+            alert(message);
+            
+            // Simulate going to web dashboard after wallet add
+            setTimeout(() => {
+                goToStep(5);
+            }, 1000);
+        }
+        
+        function addStamp() {
+            // Simulate adding stamp with animation
+            const button = event.target;
+            button.innerHTML = 'Processing...';
+            button.disabled = true;
+            
+            setTimeout(() => {
+                goToStep(7);
+            }, 1500);
+        }
+        
+        // Auto-advance demo for first-time users
+        let autoAdvanceTimer;
+        
+        function startAutoAdvance() {
+            clearTimeout(autoAdvanceTimer);
+            autoAdvanceTimer = setTimeout(() => {
+                if (currentStep < 8) {
+                    goToStep(currentStep + 1);
+                    startAutoAdvance();
+                }
+            }, 10000); // Auto-advance every 10 seconds
+        }
+        
+        // Start demo when page loads
+        window.addEventListener('load', () => {
+            goToStep(1);
+            // Uncomment to enable auto-advance
+            // startAutoAdvance();
+        });
+        
+        // Pause auto-advance on user interaction
+        document.addEventListener('click', () => {
+            clearTimeout(autoAdvanceTimer);
+        });
+    </script>
+    
+    <style>
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</body>
+</html>

@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LoyalTea Staff Scanner - Kedai Kopi Ah Lim</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f8f9fa;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #2c5530 0%, #4a7c59 100%);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 1.2rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .header .subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* Navigation */
+        .nav-tabs {
+            display: flex;
+            background: white;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .nav-tab {
+            flex: 1;
+            padding: 1rem;
+            text-align: center;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            color: #6c757d;
+            transition: all 0.3s ease;
+        }
+
+        .nav-tab.active {
+            color: #2c5530;
+            border-bottom: 2px solid #2c5530;
+            background: #f8f9fa;
+        }
+
+        .nav-tab:hover:not(.active) {
+            background: #f8f9fa;
+        }
+
+        /* Content */
+        .content {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Login Form */
+        .login-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .login-card h2 {
+            color: #2c5530;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #495057;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #2c5530;
+            box-shadow: 0 0 0 2px rgba(44, 85, 48, 0.1);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: #2c5530;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            width: 100%;
+            text-align: center;
+        }
+
+        .btn:hover {
+            background: #1e3a21;
+            transform: translateY(-1px);
+        }
+
+        /* Scanner Interface */
+        .scanner-container {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            margin-bottom: 1.5rem;
+        }
+
+        .camera-frame {
+            position: relative;
+            width: 100%;
+            height: 250px;
+            background: #000;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .camera-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 200px;
+            border: 2px solid #2c5530;
+            border-radius: 8px;
+            background: rgba(44, 85, 48, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .camera-instruction {
+            color: white;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .scan-animation {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #2c5530;
+            animation: scan 2s linear infinite;
+        }
+
+        @keyframes scan {
+            0% { top: 0; }
+            100% { top: 198px; }
+        }
+
+        /* Customer Profile */
+        .customer-profile {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            margin-bottom: 1.5rem;
+            display: none;
+        }
+
+        .customer-profile.active {
+            display: block;
+        }
+
+        .customer-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .customer-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 2rem;
+            color: #6c757d;
+        }
+
+        .customer-info h3 {
+            color: #2c5530;
+            margin-bottom: 0.25rem;
+        }
+
+        .customer-info p {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        /* Campaign Cards */
+        .campaigns {
+            margin-top: 1.5rem;
+        }
+
+        .campaigns h4 {
+            color: #2c5530;
+            margin-bottom: 1rem;
+        }
+
+        .campaign-card {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .campaign-card:hover {
+            border-color: #2c5530;
+            box-shadow: 0 2px 10px rgba(44, 85, 48, 0.1);
+        }
+
+        .campaign-card.selected {
+            border-color: #2c5530;
+            background: rgba(44, 85, 48, 0.05);
+        }
+
+        .campaign-name {
+            font-weight: 600;
+            color: #2c5530;
+            margin-bottom: 0.5rem;
+        }
+
+        .campaign-progress {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-bar {
+            flex: 1;
+            height: 6px;
+            background: #e9ecef;
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 0 0.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #2c5530;
+            transition: width 0.3s ease;
+        }
+
+        /* Transaction Actions */
+        .transaction-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .action-btn {
+            padding: 1rem;
+            border: 2px solid #2c5530;
+            border-radius: 8px;
+            background: white;
+            color: #2c5530;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .action-btn:hover {
+            background: #2c5530;
+            color: white;
+        }
+
+        .action-btn.primary {
+            background: #2c5530;
+            color: white;
+        }
+
+        .action-btn.primary:hover {
+            background: #1e3a21;
+        }
+
+        /* Success Message */
+        .success-message {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            text-align: center;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Staff Dashboard */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2c5530;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-top: 0.25rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .content {
+                padding: 0.5rem;
+            }
+            
+            .login-card,
+            .scanner-container,
+            .customer-profile {
+                padding: 1rem;
+            }
+            
+            .transaction-actions {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <h1><i class="fas fa-store"></i> Kedai Kopi Ah Lim</h1>
+        <div class="subtitle">Staff Scanner Interface</div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="nav-tabs">
+        <button class="nav-tab active" onclick="showTab('login')">Login</button>
+        <button class="nav-tab" onclick="showTab('scanner')">Scanner</button>
+        <button class="nav-tab" onclick="showTab('dashboard')">Today</button>
+    </div>
+
+    <div class="content">
+        <!-- Login Tab -->
+        <div class="tab-content active" id="login-tab">
+            <div class="login-card">
+                <h2><i class="fas fa-user-circle"></i> Staff Login</h2>
+                <form onsubmit="return loginStaff(event)">
+                    <div class="form-group">
+                        <label for="staffId">Staff ID</label>
+                        <input type="text" id="staffId" class="form-control" value="STAFF001" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="pin">PIN</label>
+                        <input type="password" id="pin" class="form-control" value="1234" required>
+                    </div>
+                    <button type="submit" class="btn">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </button>
+                </form>
+            </div>
+
+            <div class="login-card">
+                <h3 style="color: #2c5530; margin-bottom: 1rem;">Quick Login Demo</h3>
+                <p style="color: #6c757d; margin-bottom: 1rem;">For demo purposes, use the pre-filled credentials above or try:</p>
+                <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; font-family: monospace;">
+                    <strong>Staff ID:</strong> STAFF001<br>
+                    <strong>PIN:</strong> 1234
+                </div>
+            </div>
+        </div>
+
+        <!-- Scanner Tab -->
+        <div class="tab-content" id="scanner-tab">
+            <div class="scanner-container">
+                <h3 style="color: #2c5530; margin-bottom: 1rem;">
+                    <i class="fas fa-qrcode"></i> QR Code Scanner
+                </h3>
+                
+                <div class="camera-frame" id="cameraFrame">
+                    <div class="camera-overlay">
+                        <div class="scan-animation"></div>
+                        <div class="camera-instruction">
+                            <i class="fas fa-mobile-alt" style="font-size: 2rem; margin-bottom: 0.5rem;"></i><br>
+                            Point camera at customer's<br>loyalty QR code
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="btn" onclick="simulateScan()">
+                    <i class="fas fa-camera"></i> Start Scanning
+                </button>
+            </div>
+
+            <!-- Customer Profile (Initially Hidden) -->
+            <div class="customer-profile" id="customerProfile">
+                <div class="customer-header">
+                    <div class="customer-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="customer-info">
+                        <h3>Lim Wei Ming</h3>
+                        <p>+60 12-345-6789 • Joined Mar 2024</p>
+                        <p><i class="fas fa-clock"></i> Last visit: 3 days ago</p>
+                    </div>
+                </div>
+
+                <div class="campaigns">
+                    <h4><i class="fas fa-gift"></i> Active Campaigns</h4>
+                    
+                    <div class="campaign-card selected" onclick="selectCampaign(this)">
+                        <div class="campaign-name">Morning Coffee Stamps</div>
+                        <div class="campaign-progress">
+                            <span>7/10</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 70%"></div>
+                            </div>
+                            <span>3 to go</span>
+                        </div>
+                        <small style="color: #6c757d;">Next reward: Free Coffee</small>
+                    </div>
+                    
+                    <div class="campaign-card" onclick="selectCampaign(this)">
+                        <div class="campaign-name">VIP Points Program</div>
+                        <div class="campaign-progress">
+                            <span>240/500</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 48%"></div>
+                            </div>
+                            <span>260 pts</span>
+                        </div>
+                        <small style="color: #6c757d;">Next reward: RM10 Voucher</small>
+                    </div>
+                </div>
+
+                <div class="transaction-actions">
+                    <button class="action-btn primary" onclick="addStamp()">
+                        <i class="fas fa-plus"></i> Add Stamp
+                    </button>
+                    <button class="action-btn" onclick="addPoints()">
+                        <i class="fas fa-star"></i> Add Points
+                    </button>
+                    <button class="action-btn" onclick="redeemReward()">
+                        <i class="fas fa-gift"></i> Redeem
+                    </button>
+                    <button class="action-btn" onclick="viewHistory()">
+                        <i class="fas fa-history"></i> History
+                    </button>
+                </div>
+
+                <div class="success-message" id="successMessage">
+                    <i class="fas fa-check-circle"></i> Transaction completed successfully!
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Tab -->
+        <div class="tab-content" id="dashboard-tab">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-value">42</span>
+                    <div class="stat-label">Today's Scans</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value">8</span>
+                    <div class="stat-label">Rewards Given</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value">156</span>
+                    <div class="stat-label">Points Added</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value">23</span>
+                    <div class="stat-label">Stamps Added</div>
+                </div>
+            </div>
+
+            <div class="scanner-container">
+                <h3 style="color: #2c5530; margin-bottom: 1rem;">
+                    <i class="fas fa-chart-line"></i> Today's Activity
+                </h3>
+                
+                <div style="space-y: 1rem;">
+                    <div style="padding: 1rem; background: #f8f9fa; border-radius: 8px; margin-bottom: 1rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <strong>Tan Ah Kow</strong><br>
+                                <small style="color: #6c757d;">Coffee Stamps +1</small>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="color: #2c5530; font-weight: 600;">11:45 AM</div>
+                                <small style="color: #6c757d;">RM 4.50</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="padding: 1rem; background: #f8f9fa; border-radius: 8px; margin-bottom: 1rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <strong>Wong Li Mei</strong><br>
+                                <small style="color: #6c757d;">VIP Points +15</small>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="color: #2c5530; font-weight: 600;">11:30 AM</div>
+                                <small style="color: #6c757d;">RM 12.80</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="padding: 1rem; background: #d4edda; border-radius: 8px; margin-bottom: 1rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <strong>Kumar Raj</strong><br>
+                                <small style="color: #155724;"><i class="fas fa-gift"></i> Free Coffee Redeemed</small>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="color: #2c5530; font-weight: 600;">11:15 AM</div>
+                                <small style="color: #6c757d;">RM 0.00</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="scanner-container">
+                <h3 style="color: #2c5530; margin-bottom: 1rem;">
+                    <i class="fas fa-users"></i> Quick Actions
+                </h3>
+                
+                <div class="transaction-actions">
+                    <button class="action-btn" onclick="showTab('scanner')">
+                        <i class="fas fa-qrcode"></i> New Scan
+                    </button>
+                    <button class="action-btn" onclick="alert('Manual entry feature - for customers without QR codes')">
+                        <i class="fas fa-keyboard"></i> Manual Entry
+                    </button>
+                    <button class="action-btn" onclick="alert('Daily report generation - export today\\'s transactions')">
+                        <i class="fas fa-file-export"></i> Daily Report
+                    </button>
+                    <button class="action-btn" onclick="alert('Help & support - contact business owner or LoyalTea support')">
+                        <i class="fas fa-question-circle"></i> Help
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab Management
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active from all nav tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName + '-tab').classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Login Function
+        function loginStaff(event) {
+            event.preventDefault();
+            
+            const staffId = document.getElementById('staffId').value;
+            const pin = document.getElementById('pin').value;
+            
+            // Simple validation for demo
+            if (staffId === 'STAFF001' && pin === '1234') {
+                // Switch to scanner tab
+                showTab('scanner');
+                
+                // Update nav tab active state
+                document.querySelectorAll('.nav-tab').forEach(tab => {
+                    tab.classList.remove('active');
+                });
+                document.querySelectorAll('.nav-tab')[1].classList.add('active');
+                
+                alert('Login successful! Welcome, Sarah Ahmad');
+            } else {
+                alert('Invalid credentials. Please try STAFF001 / 1234');
+            }
+            
+            return false;
+        }
+
+        // QR Scanner Simulation
+        function simulateScan() {
+            const cameraFrame = document.getElementById('cameraFrame');
+            const customerProfile = document.getElementById('customerProfile');
+            
+            // Show scanning animation
+            cameraFrame.innerHTML = `
+                <div class="camera-overlay">
+                    <div class="scan-animation"></div>
+                    <div class="camera-instruction">
+                        <i class="fas fa-spinner fa-spin" style="font-size: 2rem; margin-bottom: 0.5rem;"></i><br>
+                        Scanning QR Code...
+                    </div>
+                </div>
+            `;
+            
+            // Simulate scan completion
+            setTimeout(() => {
+                cameraFrame.innerHTML = `
+                    <div class="camera-overlay" style="border-color: #28a745; background: rgba(40, 167, 69, 0.1);">
+                        <div class="camera-instruction">
+                            <i class="fas fa-check-circle" style="font-size: 2rem; margin-bottom: 0.5rem; color: #28a745;"></i><br>
+                            QR Code Found!<br>
+                            <small>Loading customer...</small>
+                        </div>
+                    </div>
+                `;
+                
+                // Show customer profile
+                setTimeout(() => {
+                    customerProfile.classList.add('active');
+                }, 1000);
+            }, 2000);
+        }
+
+        // Campaign Selection
+        function selectCampaign(element) {
+            // Remove selected from all campaigns
+            document.querySelectorAll('.campaign-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Add selected to clicked campaign
+            element.classList.add('selected');
+        }
+
+        // Transaction Actions
+        function addStamp() {
+            const progressFill = document.querySelector('.campaign-card.selected .progress-fill');
+            const progressText = document.querySelector('.campaign-card.selected .campaign-progress span');
+            const successMessage = document.getElementById('successMessage');
+            
+            // Update progress (simulate adding 1 stamp)
+            const currentWidth = parseInt(progressFill.style.width) || 70;
+            const newWidth = Math.min(100, currentWidth + 10);
+            progressFill.style.width = newWidth + '%';
+            
+            // Update text
+            const currentStamps = 7;
+            const newStamps = Math.min(10, currentStamps + 1);
+            progressText.textContent = newStamps + '/10';
+            
+            // Show success message
+            successMessage.innerHTML = '<i class="fas fa-check-circle"></i> Stamp added successfully! Customer earned 1 stamp.';
+            successMessage.classList.add('show');
+            
+            // Hide success message after 3 seconds
+            setTimeout(() => {
+                successMessage.classList.remove('show');
+            }, 3000);
+        }
+
+        function addPoints() {
+            const successMessage = document.getElementById('successMessage');
+            
+            successMessage.innerHTML = '<i class="fas fa-check-circle"></i> Points added successfully! Customer earned 10 points.';
+            successMessage.classList.add('show');
+            
+            setTimeout(() => {
+                successMessage.classList.remove('show');
+            }, 3000);
+        }
+
+        function redeemReward() {
+            const successMessage = document.getElementById('successMessage');
+            
+            successMessage.innerHTML = '<i class="fas fa-gift"></i> Reward redeemed successfully! Free coffee has been given to customer.';
+            successMessage.classList.add('show');
+            
+            setTimeout(() => {
+                successMessage.classList.remove('show');
+            }, 3000);
+        }
+
+        function viewHistory() {
+            alert('Customer Transaction History:\n\n' +
+                  '• Mar 15, 2024 - Coffee Stamp +1 (RM 4.50)\n' +
+                  '• Mar 12, 2024 - VIP Points +15 (RM 12.80)\n' +
+                  '• Mar 10, 2024 - Free Coffee Redeemed (RM 0.00)\n' +
+                  '• Mar 8, 2024 - Coffee Stamp +1 (RM 4.50)\n' +
+                  '• Mar 5, 2024 - VIP Points +20 (RM 18.90)');
+        }
+
+        // Initialize demo
+        document.addEventListener('DOMContentLoaded', function() {
+            // Auto-focus on login form
+            document.getElementById('staffId').focus();
+        });
+    </script>
+</body>
+</html>

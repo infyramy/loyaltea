@@ -1,10 +1,12 @@
-# LoyalTea - Complete Loyalty Card Type Specifications
+# LoyalTea Loyalty Card Specifications
+*Complete card types for Malaysian SME businesses*
 
-## 🎯 Overview: "The Simplest Loyalty Program"
+## 🎯 Overview
 
-**8 Card Types Available** - Business owners choose ONE type during setup
-**Single Configuration** - Each card type has simple, preset configurations
+**8 Card Types Available** - Business owners can create multiple campaigns with different card types
+**Campaign-Based System** - Each campaign = one loyalty card type with its own branding and rules  
 **Universal QR System** - All card types work with the same QR scanning workflow
+**Malaysian Business Focus** - Examples and recommendations tailored for local market
 
 ---
 

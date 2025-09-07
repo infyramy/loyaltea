@@ -1,0 +1,1674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LoyalTea Card Types Showcase</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Shadcn/UI Style Variables */
+        :root {
+            --background: 0 0% 100%;
+            --foreground: 222.2 84% 4.9%;
+            --card: 0 0% 100%;
+            --card-foreground: 222.2 84% 4.9%;
+            --popover: 0 0% 100%;
+            --popover-foreground: 222.2 84% 4.9%;
+            --primary: 222.2 47.4% 11.2%;
+            --primary-foreground: 210 40% 98%;
+            --secondary: 210 40% 96%;
+            --secondary-foreground: 222.2 47.4% 11.2%;
+            --muted: 210 40% 96%;
+            --muted-foreground: 215.4 16.3% 46.9%;
+            --accent: 210 40% 96%;
+            --accent-foreground: 222.2 47.4% 11.2%;
+            --destructive: 0 62.8% 30.6%;
+            --destructive-foreground: 210 40% 98%;
+            --border: 214.3 31.8% 91.4%;
+            --input: 214.3 31.8% 91.4%;
+            --ring: 222.2 84% 4.9%;
+            --radius: 0.5rem;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* Navigation */
+        .nav-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 1rem;
+            position: sticky;
+            top: 120px;
+            z-index: 90;
+        }
+
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .nav-tab {
+            padding: 0.75rem 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-tab:hover,
+        .nav-tab.active {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Content */
+        .content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .card-section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .card-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Card Showcase */
+        .card-showcase {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 3rem;
+        }
+
+        .card-visual {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .card-preview {
+            width: 320px;
+            height: 200px;
+            background: linear-gradient(135deg, #2c5530 0%, #4a7c59 100%);
+            border-radius: 16px;
+            padding: 1.5rem;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transform-style: preserve-3d;
+            transition: transform 0.3s ease;
+        }
+
+        .card-preview:hover {
+            transform: rotateY(10deg) rotateX(5deg);
+        }
+
+        .card-preview.stamp-card {
+            background: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%);
+        }
+        
+        .wallet-preview.stamp-card {
+            background: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%);
+        }
+
+        .card-preview.points-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .card-preview.cashback-card {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+        
+        .wallet-preview.cashback-card {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+
+        .card-preview.tier-card {
+            background: linear-gradient(135deg, #ff9f43 0%, #ff6348 100%);
+        }
+
+        .card-preview.frequency-card {
+            background: linear-gradient(135deg, #5f27cd 0%, #341f97 100%);
+        }
+        
+        .wallet-preview.frequency-card {
+            background: linear-gradient(135deg, #5f27cd 0%, #341f97 100%);
+        }
+
+        .card-preview.referral-card {
+            background: linear-gradient(135deg, #00d2d3 0%, #54a0ff 100%);
+        }
+
+        .card-preview.birthday-card {
+            background: linear-gradient(135deg, #ff9ff3 0%, #f368e0 100%);
+        }
+        
+        .wallet-preview.birthday-card {
+            background: linear-gradient(135deg, #ff9ff3 0%, #f368e0 100%);
+        }
+
+        .card-preview.combo-card {
+            background: linear-gradient(135deg, #2c2c54 0%, #40407a 100%);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .business-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .card-logo {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .card-progress {
+            position: absolute;
+            bottom: 1.5rem;
+            left: 1.5rem;
+            right: 1.5rem;
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: white;
+            border-radius: 2px;
+            transition: width 0.5s ease;
+        }
+
+        .progress-text {
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+
+        /* Apple Wallet Preview - Authentic iOS Style */
+        .wallet-preview {
+            width: 300px;
+            height: 185px;
+            background: linear-gradient(135deg, #2c5530 0%, #4a7c59 100%);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            overflow: hidden;
+            position: relative;
+            color: white;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', sans-serif;
+            border: 0.5px solid rgba(255,255,255,0.1);
+        }
+
+        /* Google Wallet Preview - Material Design Style */
+        .wallet-preview.google {
+            background: #ffffff;
+            color: #1f1f1f;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            border-radius: 8px;
+        }
+
+        /* Apple Wallet Header */
+        .wallet-header {
+            padding: 16px 20px 4px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            opacity: 0.8;
+        }
+
+        /* Google Wallet Header */
+        .wallet-header.google {
+            background: #f8f9fa;
+            border-bottom: 1px solid #e8eaed;
+            color: #5f6368;
+            padding: 12px 16px;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: none;
+            letter-spacing: 0;
+            opacity: 1;
+        }
+
+        .wallet-provider {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .wallet-provider i {
+            font-size: 14px;
+        }
+
+        /* Apple Wallet Logo Section */
+        .wallet-logo-section {
+            padding: 8px 20px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .wallet-business-logo {
+            width: 29px;
+            height: 29px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            border: 0.5px solid rgba(255,255,255,0.2);
+        }
+
+        /* Google Wallet Logo Section */
+        .wallet-logo-section.google {
+            padding: 8px 16px 12px;
+        }
+
+        .wallet-business-logo.google {
+            background: #f1f3f4;
+            color: #5f6368;
+            border: 1px solid #e0e0e0;
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+        }
+
+        /* Apple Wallet NFC Symbol */
+        .wallet-nfc {
+            font-size: 16px;
+            opacity: 0.6;
+        }
+
+        .wallet-nfc.google {
+            display: none;
+        }
+
+        /* Apple Wallet Main Content */
+        .wallet-main-content {
+            padding: 0 20px 16px;
+            flex: 1;
+        }
+
+        .wallet-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 2px;
+            line-height: 1.2;
+            letter-spacing: -0.24px;
+        }
+
+        .wallet-business {
+            font-size: 13px;
+            opacity: 0.7;
+            margin-bottom: 10px;
+            font-weight: 400;
+        }
+
+        .wallet-progress {
+            font-size: 13px;
+            font-weight: 400;
+            line-height: 1.3;
+            opacity: 0.9;
+        }
+
+        /* Google Wallet Main Content */
+        .wallet-main-content.google {
+            padding: 0 16px 12px;
+        }
+
+        .wallet-title.google {
+            color: #1f1f1f;
+            font-size: 16px;
+            font-weight: 500;
+            letter-spacing: 0;
+        }
+
+        .wallet-business.google {
+            color: #5f6368;
+            opacity: 1;
+        }
+
+        .wallet-progress.google {
+            color: #1f1f1f;
+            font-size: 13px;
+            font-weight: 400;
+            opacity: 1;
+        }
+
+        /* Apple Wallet Bottom Section */
+        .wallet-bottom {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.1);
+        }
+
+        /* Apple Wallet Barcode - Authentic Design */
+        .wallet-barcode {
+            height: 100%;
+            width: 100%;
+            background: rgba(255,255,255,0.15);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .wallet-barcode::before {
+            content: "";
+            position: absolute;
+            width: 80px;
+            height: 16px;
+            background: repeating-linear-gradient(
+                90deg,
+                rgba(255,255,255,0.95) 0px,
+                rgba(255,255,255,0.95) 1px,
+                transparent 1px,
+                transparent 3px
+            );
+            border-radius: 2px;
+        }
+
+        .wallet-barcode::after {
+            content: "";
+            position: absolute;
+            bottom: 4px;
+            right: 8px;
+            width: 12px;
+            height: 12px;
+            background: rgba(255,255,255,0.6);
+            border-radius: 2px;
+            font-size: 6px;
+        }
+
+        /* Google Wallet Bottom Section */
+        .wallet-bottom.google {
+            background: transparent;
+            height: 32px;
+        }
+
+        .wallet-barcode.google {
+            background: #f8f9fa;
+            border-top: 1px solid #e8eaed;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #5f6368;
+        }
+
+        .wallet-barcode.google::before {
+            content: "";
+            width: 60px;
+            height: 20px;
+            background: repeating-linear-gradient(
+                90deg,
+                #1f1f1f 0px,
+                #1f1f1f 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            border-radius: 2px;
+        }
+
+        .wallet-barcode.google::after {
+            content: "Google Pay";
+            position: absolute;
+            bottom: 2px;
+            right: 8px;
+            color: #5f6368;
+            font-size: 8px;
+            font-weight: 500;
+        }
+
+        /* Progress indicators for different card types */
+        .progress-indicator {
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+        /* Apple Wallet Stamp Visual */
+        .stamps-visual {
+            display: flex;
+            gap: 3px;
+            margin-bottom: 6px;
+            align-items: center;
+        }
+
+        .stamp-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.9);
+            border: 0.5px solid rgba(255,255,255,0.3);
+        }
+
+        .stamp-dot.empty {
+            background: transparent;
+            border: 0.5px solid rgba(255,255,255,0.4);
+        }
+
+        /* Google Wallet Stamp Visual */
+        .stamps-visual.google {
+            gap: 2px;
+        }
+
+        .stamp-dot.google {
+            background: #34a853;
+            border: none;
+            width: 10px;
+            height: 10px;
+        }
+
+        .stamp-dot.empty.google {
+            background: #e0e0e0;
+            border: 1px solid #bdbdbd;
+        }
+
+        /* Points and Value Display */
+        .points-display {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 2px;
+            letter-spacing: -0.15px;
+        }
+
+        .points-display.google {
+            font-size: 14px;
+            font-weight: 500;
+            color: #1f1f1f;
+        }
+
+        .tier-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 600;
+        }
+
+        /* Card Details */
+        .card-details {
+            color: white;
+        }
+
+        .card-details h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-list {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .feature-list li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+        }
+
+        .feature-list li i {
+            width: 20px;
+            margin-right: 0.75rem;
+            color: #4ade80;
+        }
+
+        .business-examples {
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .business-examples h4 {
+            margin-bottom: 1rem;
+            color: #4ade80;
+        }
+
+        .example-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .example-item {
+            background: rgba(255,255,255,0.1);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .example-item i {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: #4ade80;
+        }
+
+        .example-item h5 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .example-item p {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        /* Implementation Guide - Shadcn Style */
+        .implementation-guide {
+            background: hsl(var(--card));
+            border: 1px solid hsl(var(--border));
+            border-radius: calc(var(--radius) * 2);
+            padding: 2rem;
+            margin-top: 2rem;
+            color: hsl(var(--card-foreground));
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+        }
+
+        .implementation-guide h4 {
+            color: #2c5530;
+            margin-bottom: 1rem;
+        }
+
+        .guide-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        /* Shadcn Style Step Cards */
+        .step-card {
+            background: hsl(var(--card));
+            border: 1px solid hsl(var(--border));
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+        }
+
+        .step-card:hover {
+            border-color: hsl(var(--ring));
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+
+        .step-number {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background: #2c5530;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin: 0 auto 1rem;
+        }
+
+        /* Shadcn Style Badges */
+        .tier-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.125rem 0.625rem;
+            border-radius: calc(var(--radius) - 2px);
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+            border: 1px solid transparent;
+            transition: colors 0.2s;
+        }
+
+        .tier-basic {
+            background: hsl(214 100% 97%);
+            color: hsl(214 84% 56%);
+            border-color: hsl(214 100% 91%);
+        }
+
+        .tier-business {
+            background: hsl(316 70% 96%);
+            color: hsl(316 70% 36%);
+            border-color: hsl(316 70% 88%);
+        }
+
+        .tier-multi {
+            background: hsl(142 76% 95%);
+            color: hsl(142 71% 45%);
+            border-color: hsl(142 76% 87%);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .card-showcase {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                padding: 2rem 1rem;
+            }
+            
+            .card-preview,
+            .wallet-preview {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .nav-tabs {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .content {
+                padding: 1rem;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .guide-steps {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <h1><i class="fas fa-id-card"></i> LoyalTea Card Types</h1>
+        <p>Complete showcase of all 8 loyalty card types with Malaysian business examples</p>
+    </div>
+
+    <!-- Navigation -->
+    <div class="nav-container">
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showCard('stamp')">Stamp Cards</button>
+            <button class="nav-tab" onclick="showCard('points')">Points Cards</button>
+            <button class="nav-tab" onclick="showCard('cashback')">Cashback Cards</button>
+            <button class="nav-tab" onclick="showCard('tier')">Tier Cards</button>
+            <button class="nav-tab" onclick="showCard('frequency')">Frequency Cards</button>
+            <button class="nav-tab" onclick="showCard('referral')">Referral Cards</button>
+            <button class="nav-tab" onclick="showCard('birthday')">Birthday Cards</button>
+            <button class="nav-tab" onclick="showCard('combo')">Combo Cards</button>
+        </div>
+    </div>
+
+    <div class="content">
+        <!-- Stamp Cards -->
+        <div class="card-section active" id="stamp-section">
+            <div class="card-showcase">
+                <div class="card-visual">
+                    <div class="card-preview stamp-card">
+                        <div class="card-header">
+                            <div class="business-name">Kedai Kopi Ah Lim</div>
+                            <div class="card-logo"><i class="fas fa-coffee"></i></div>
+                        </div>
+                        <div class="card-title">Morning Coffee Stamps</div>
+                        <div class="card-subtitle">Buy 10 coffees, get 1 free</div>
+                        <div class="card-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 70%"></div>
+                            </div>
+                            <div class="progress-text">7 of 10 stamps collected</div>
+                        </div>
+                    </div>
+
+                    <div class="wallet-preview stamp-card">
+                        <div class="wallet-header">
+                            <div class="wallet-provider">
+                                <i class="fas fa-wallet"></i>
+                                <span>Apple Wallet</span>
+                            </div>
+                            <span>•••</span>
+                        </div>
+                        <div class="wallet-logo-section">
+                            <div class="wallet-business-logo">
+                                <i class="fas fa-coffee"></i>
+                            </div>
+                            <div class="wallet-nfc">
+                                <i class="fas fa-signal" style="transform: rotate(90deg);"></i>
+                            </div>
+                        </div>
+                        <div class="wallet-main-content">
+                            <div class="wallet-title">Morning Coffee Stamps</div>
+                            <div class="wallet-business">Kedai Kopi Ah Lim</div>
+                            <div class="wallet-progress">
+                                <div class="stamps-visual">
+                                    <div class="stamp-dot"></div>
+                                    <div class="stamp-dot"></div>
+                                    <div class="stamp-dot"></div>
+                                    <div class="stamp-dot"></div>
+                                    <div class="stamp-dot"></div>
+                                    <div class="stamp-dot"></div>
+                                    <div class="stamp-dot"></div>
+                                    <div class="stamp-dot empty"></div>
+                                    <div class="stamp-dot empty"></div>
+                                    <div class="stamp-dot empty"></div>
+                                </div>
+                                3 more stamps for free coffee
+                            </div>
+                        </div>
+                        <div class="wallet-bottom">
+                            <div class="wallet-barcode"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-details">
+                    <h3><i class="fas fa-stamp"></i> Stamp Cards</h3>
+                    <p style="font-size: 1.1rem; margin-bottom: 2rem; opacity: 0.9;">
+                        The most popular loyalty card type in Malaysia. Simple visual progress tracking that customers love.
+                    </p>
+
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> Visual stamp collection (1-20 stamps)</li>
+                        <li><i class="fas fa-check"></i> Clear reward milestones</li>
+                        <li><i class="fas fa-check"></i> Perfect for cafes and restaurants</li>
+                        <li><i class="fas fa-check"></i> Easy staff training</li>
+                        <li><i class="fas fa-check"></i> High customer engagement</li>
+                    </ul>
+
+                    <div class="business-examples">
+                        <h4><i class="fas fa-store"></i> Perfect Malaysian Businesses</h4>
+                        <div class="example-grid">
+                            <div class="example-item">
+                                <i class="fas fa-coffee"></i>
+                                <h5>Coffee Shops</h5>
+                                <p>10 coffees = 1 free</p>
+                            </div>
+                            <div class="example-item">
+                                <i class="fas fa-utensils"></i>
+                                <h5>Mamak Stalls</h5>
+                                <p>12 meals = free roti</p>
+                            </div>
+                            <div class="example-item">
+                                <i class="fas fa-ice-cream"></i>
+                                <h5>Dessert Shops</h5>
+                                <p>8 desserts = 1 free</p>
+                            </div>
+                            <div class="example-item">
+                                <i class="fas fa-bread-slice"></i>
+                                <h5>Bakeries</h5>
+                                <p>15 pastries = free cake</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tier-badge tier-basic">Available on Basic Plan (RM99)</div>
+                </div>
+            </div>
+
+            <div class="implementation-guide">
+                <h4><i class="fas fa-cogs"></i> Implementation Guide</h4>
+                <p>How to set up stamp cards for maximum customer engagement in Malaysia</p>
+
+                <div class="guide-steps">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <h5>Define Reward</h5>
+                        <p>Set clear, achievable goals (8-12 stamps typical for Malaysian businesses)</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <h5>Design Card</h5>
+                        <p>Choose colors and add your business logo for brand recognition</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <h5>Train Staff</h5>
+                        <p>Show staff how to add stamps using the QR scanner</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">4</div>
+                        <h5>Launch Campaign</h5>
+                        <p>Promote to existing customers and display QR codes prominently</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Points Cards -->
+        <div class="card-section" id="points-section">
+            <div class="card-showcase">
+                <div class="card-visual">
+                    <div class="card-preview points-card">
+                        <div class="card-header">
+                            <div class="business-name">Pharmacy Rahman</div>
+                            <div class="card-logo"><i class="fas fa-pills"></i></div>
+                        </div>
+                        <div class="card-title">Health Points</div>
+                        <div class="card-subtitle">Earn 1 point per RM1 spent</div>
+                        <div class="card-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 48%"></div>
+                            </div>
+                            <div class="progress-text">240 of 500 points earned</div>
+                        </div>
+                    </div>
+
+                    <div class="wallet-preview google">
+                        <div class="wallet-header google">
+                            <div class="wallet-provider">
+                                <i class="fab fa-google-pay"></i>
+                                <span>Google Wallet</span>
+                            </div>
+                        </div>
+                        <div class="wallet-logo-section google">
+                            <div class="wallet-business-logo google">
+                                <i class="fas fa-pills"></i>
+                            </div>
+                        </div>
+                        <div class="wallet-main-content google">
+                            <div class="wallet-title google">Health Points</div>
+                            <div class="wallet-business google">Pharmacy Rahman</div>
+                            <div class="wallet-progress google">
+                                <div class="points-display google">240 points</div>
+                                260 more for RM10 voucher
+                            </div>
+                        </div>
+                        <div class="wallet-bottom google">
+                            <div class="wallet-barcode google"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-details">
+                    <h3><i class="fas fa-star"></i> Points Cards</h3>
+                    <p style="font-size: 1.1rem; margin-bottom: 2rem; opacity: 0.9;">
+                        Flexible reward system based on spending amount. Perfect for businesses with varying transaction values.
+                    </p>
+
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> Earn points based on spending (1 point per RM1-5)</li>
+                        <li><i class="fas fa-check"></i> Multiple reward tiers (100, 500, 1000 points)</li>
+                        <li><i class="fas fa-check"></i> Flexible redemption options</li>
+                        <li><i class="fas fa-check"></i> Encourages higher spending</li>
+                        <li><i class="fas fa-check"></i> Detailed purchase tracking</li>
+                    </ul>
+
+                    <div class="business-examples">
+                        <h4><i class="fas fa-store"></i> Perfect Malaysian Businesses</h4>
+                        <div class="example-grid">
+                            <div class="example-item">
+                                <i class="fas fa-pills"></i>
+                                <h5>Pharmacies</h5>
+                                <p>Health & wellness rewards</p>
+                            </div>
+                            <div class="example-item">
+                                <i class="fas fa-tshirt"></i>
+                                <h5>Clothing Stores</h5>
+                                <p>Fashion purchase points</p>
+                            </div>
+                            <div class="example-item">
+                                <i class="fas fa-car"></i>
+                                <h5>Petrol Stations</h5>
+                                <p>Fuel purchase rewards</p>
+                            </div>
+                            <div class="example-item">
+                                <i class="fas fa-shopping-cart"></i>
+                                <h5>Mini Markets</h5>
+                                <p>Grocery spending points</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tier-badge tier-business">Available on Business Plan (RM199)</div>
+                </div>
+            </div>
+
+            <div class="implementation-guide">
+                <h4><i class="fas fa-calculator"></i> Points Structure Guide</h4>
+                <p>Recommended point structures for different Malaysian business types</p>
+
+                <div class="guide-steps">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <h5>Calculate Ratios</h5>
+                        <p>Typical: 1 point per RM2-5 spent, adjust based on profit margins</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <h5>Set Tiers</h5>
+                        <p>100 pts = RM5, 500 pts = RM25, 1000 pts = RM50 voucher</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <h5>Add Bonuses</h5>
+                        <p>Double points days, birthday bonuses, special promotions</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">4</div>
+                        <h5>Track & Adjust</h5>
+                        <p>Monitor redemption rates and adjust point values quarterly</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cashback Cards -->
+        <div class="card-section" id="cashback-section">
+            <div class="card-showcase">
+                <div class="card-visual">
+                    <div class="card-preview cashback-card">
+                        <div class="card-header">
+                            <div class="business-name">Restoran Golden</div>
+                            <div class="card-logo"><i class="fas fa-utensils"></i></div>
+                        </div>
+                        <div class="card-title">Cashback Rewards</div>
+                        <div class="card-subtitle">5% cashback on all meals</div>
+                        <div class="card-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 65%"></div>
+                            </div>
+                            <div class="progress-text">RM 13.50 earned this month</div>
+                        </div>
+                    </div>
+
+                    <div class="wallet-preview cashback-card">
+                        <div class="wallet-header">
+                            <div class="wallet-provider">
+                                <i class="fas fa-wallet"></i>
+                                <span>Apple Wallet</span>
+                            </div>
+                            <span>•••</span>
+                        </div>
+                        <div class="wallet-logo-section">
+                            <div class="wallet-business-logo">
+                                <i class="fas fa-utensils"></i>
+                            </div>
+                            <div class="wallet-nfc">
+                                <i class="fas fa-signal" style="transform: rotate(90deg);"></i>
+                            </div>
+                        </div>
+                        <div class="wallet-main-content">
+                            <div class="wallet-title">Cashback Rewards</div>
+                            <div class="wallet-business">Restoran Golden</div>
+                            <div class="wallet-progress">
+                                <div class="points-display">RM 13.50</div>
+                                5% back on every purchase
+                            </div>
+                        </div>
+                        <div class="wallet-bottom">
+                            <div class="wallet-barcode"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-details">
+                    <h3><i class="fas fa-money-bill-wave"></i> Cashback Cards</h3>
+                    <p style="font-size: 1.1rem; margin-bottom: 2rem; opacity: 0.9;">
+                        Direct monetary rewards that customers can use immediately. Creates strong incentive for repeat visits.
+                    </p>
+
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> Percentage-based cashback (2-10%)</li>
+                        <li><i class="fas fa-check"></i> Immediate usable value</li>
+                        <li><i class="fas fa-check"></i> Automatic balance tracking</li>
+                        <li><i class="fas fa-check"></i> Strong repeat customer incentive</li>
+                        <li><i class="fas fa-check"></i> Easy to understand value proposition</li>
+                    </ul>
+
+                    <div class="business-examples">
+                        <h4><i class="fas fa-store"></i> Perfect Malaysian Businesses</h4>
+                        <div class="example-grid">
+                            <div class="example-item">
+                                <i class="fas fa-utensils"></i>
+                                <h5>Restaurants</h5>
+                                <p>3-5% back on meals</p>
+                            </div>
+                            <div class="example-item">
+                                <i class="fas fa-car-wash"></i>
+                                <h5>Car Wash</h5>
+                                <p>10% back for next service</p>
+                            </div>
+                            <div class="example-item">
+                                <i class="fas fa-cut"></i>
+                                <h5>Salons</h5>
+                                <p>5% back on treatments</p>
+                            </div>
+                            <div class="example-item">
+                                <i class="fas fa-tools"></i>
+                                <h5>Auto Services</h5>
+                                <p>8% back on repairs</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tier-badge tier-business">Available on Business Plan (RM199)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tier Cards -->
+        <div class="card-section" id="tier-section">
+            <div class="card-showcase">
+                <div class="card-visual">
+                    <div class="card-preview tier-card">
+                        <div class="card-header">
+                            <div class="business-name">Beauty Salon Siti</div>
+                            <div class="card-logo"><i class="fas fa-crown"></i></div>
+                        </div>
+                        <div class="card-title">VIP Gold Status</div>
+                        <div class="card-subtitle">Tier 2 of 3 - Special benefits</div>
+                        <div class="card-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 40%"></div>
+                            </div>
+                            <div class="progress-text">RM 800 to Platinum status</div>
+                        </div>
+                    </div>
+
+                    <div class="wallet-preview google">
+                        <div class="wallet-header google">
+                            <div class="wallet-provider">
+                                <i class="fab fa-google-pay"></i>
+                                <span>Google Wallet</span>
+                            </div>
+                        </div>
+                        <div class="wallet-logo-section google">
+                            <div class="wallet-business-logo google">
+                                <i class="fas fa-crown"></i>
+                            </div>
+                        </div>
+                        <div class="wallet-main-content google">
+                            <div class="wallet-title google">VIP Gold Status</div>
+                            <div class="wallet-business google">Beauty Salon Siti</div>
+                            <div class="wallet-progress google">
+                                <div class="tier-indicator">
+                                    <i class="fas fa-crown" style="color: #ffd700;"></i>
+                                    <span>Gold Member</span>
+                                </div>
+                                15% discount + priority booking
+                            </div>
+                        </div>
+                        <div class="wallet-bottom google">
+                            <div class="wallet-barcode google"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-details">
+                    <h3><i class="fas fa-layer-group"></i> Tier Cards</h3>
+                    <p style="font-size: 1.1rem; margin-bottom: 2rem; opacity: 0.9;">
+                        Progressive loyalty system with increasing benefits. Builds long-term customer relationships and higher lifetime value.
+                    </p>
+
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> 3-5 progressive tiers (Bronze, Silver, Gold, Platinum)</li>
+                        <li><i class="fas fa-check"></i> Spending-based tier advancement</li>
+                        <li><i class="fas fa-check"></i> Exclusive tier-specific rewards</li>
+                        <li><i class="fas fa-check"></i> Status maintenance requirements</li>
+                        <li><i class="fas fa-check"></i> VIP customer identification</li>
+                    </ul>
+
+                    <div class="business-examples">
+                        <h4><i class="fas fa-store"></i> Perfect Malaysian Businesses</h4>
+                        <div class="example-grid">
+                            <div class="example-item">
+                                <i class="fas fa-cut"></i>
+                                <h5>Beauty Salons</h5>
+                                <p>Bronze/Silver/Gold/Platinum</p>
+                            </div>
+                            <div class="example-item">
+                                <i class="fas fa-dumbbell"></i>
+                                <h5>Gyms & Fitness</h5>
+                                <p>Member tier benefits</p>
+                            </div>
+                            <div class="example-item">
+                                <i class="fas fa-spa"></i>
+                                <h5>Spas</h5>
+                                <p>Wellness tier rewards</p>
+                            </div>
+                            <div class="example-item">
+                                <i class="fas fa-graduation-cap"></i>
+                                <h5>Education Centers</h5>
+                                <p>Student loyalty tiers</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tier-badge tier-multi">Available on Multi-Branch Plan (RM299)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Other card sections would follow similar pattern -->
+        <!-- For brevity, showing structure for remaining cards -->
+
+        <!-- Frequency Cards -->
+        <div class="card-section" id="frequency-section">
+            <div class="card-showcase">
+                <div class="card-visual">
+                    <div class="card-preview frequency-card">
+                        <div class="card-header">
+                            <div class="business-name">Gym Fitness Plus</div>
+                            <div class="card-logo"><i class="fas fa-dumbbell"></i></div>
+                        </div>
+                        <div class="card-title">Weekly Warrior</div>
+                        <div class="card-subtitle">Visit 4 times per week</div>
+                        <div class="card-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 75%"></div>
+                            </div>
+                            <div class="progress-text">3 of 4 weekly visits</div>
+                        </div>
+                    </div>
+
+                    <div class="wallet-preview frequency-card">
+                        <div class="wallet-header">
+                            <div class="wallet-provider">
+                                <i class="fas fa-wallet"></i>
+                                <span>Apple Wallet</span>
+                            </div>
+                            <span>•••</span>
+                        </div>
+                        <div class="wallet-logo-section">
+                            <div class="wallet-business-logo">
+                                <i class="fas fa-dumbbell"></i>
+                            </div>
+                            <div class="wallet-nfc">
+                                <i class="fas fa-signal" style="transform: rotate(90deg);"></i>
+                            </div>
+                        </div>
+                        <div class="wallet-main-content">
+                            <div class="wallet-title">Weekly Warrior</div>
+                            <div class="wallet-business">Gym Fitness Plus</div>
+                            <div class="wallet-progress">
+                                <div class="points-display">3/4 visits</div>
+                                1 more visit for bonus points
+                            </div>
+                        </div>
+                        <div class="wallet-bottom">
+                            <div class="wallet-barcode"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-details">
+                    <h3><i class="fas fa-calendar-check"></i> Frequency Cards</h3>
+                    <p style="font-size: 1.1rem; margin-bottom: 2rem; opacity: 0.9;">
+                        Reward consistent visits within specific time periods. Perfect for businesses where regularity matters.
+                    </p>
+
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> Time-based visit goals (daily, weekly, monthly)</li>
+                        <li><i class="fas fa-check"></i> Streak tracking and bonuses</li>
+                        <li><i class="fas fa-check"></i> Habit-building rewards</li>
+                        <li><i class="fas fa-check"></i> Consistency incentives</li>
+                        <li><i class="fas fa-check"></i> Automatic period reset</li>
+                    </ul>
+
+                    <div class="business-examples">
+                        <h4><i class="fas fa-store"></i> Perfect Malaysian Businesses</h4>
+                        <div class="example-grid">
+                            <div class="example-item">
+                                <i class="fas fa-dumbbell"></i>
+                                <h5>Gyms</h5>
+                                <p>Weekly visit goals</p>
+                            </div>
+                            <div class="example-item">
+                                <i class="fas fa-coffee"></i>
+                                <h5>Daily Coffee</h5>
+                                <p>Morning routine rewards</p>
+                            </div>
+                            <div class="example-item">
+                                <i class="fas fa-car-wash"></i>
+                                <h5>Car Wash</h5>
+                                <p>Monthly cleaning plans</p>
+                            </div>
+                            <div class="example-item">
+                                <i class="fas fa-book"></i>
+                                <h5>Libraries/Study</h5>
+                                <p>Study streak rewards</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tier-badge tier-business">Available on Business Plan (RM199)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Referral Cards -->
+        <div class="card-section" id="referral-section">
+            <div class="card-showcase">
+                <div class="card-visual">
+                    <div class="card-preview referral-card">
+                        <div class="card-header">
+                            <div class="business-name">Tuition Center</div>
+                            <div class="card-logo"><i class="fas fa-users"></i></div>
+                        </div>
+                        <div class="card-title">Refer & Earn</div>
+                        <div class="card-subtitle">RM50 for each referral</div>
+                        <div class="card-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 60%"></div>
+                            </div>
+                            <div class="progress-text">3 successful referrals</div>
+                        </div>
+                    </div>
+
+                    <div class="wallet-preview google">
+                        <div class="wallet-header google">
+                            <div class="wallet-provider">
+                                <i class="fab fa-google-pay"></i>
+                                <span>Google Wallet</span>
+                            </div>
+                        </div>
+                        <div class="wallet-logo-section google">
+                            <div class="wallet-business-logo google">
+                                <i class="fas fa-users"></i>
+                            </div>
+                        </div>
+                        <div class="wallet-main-content google">
+                            <div class="wallet-title google">Refer & Earn</div>
+                            <div class="wallet-business google">Tuition Center</div>
+                            <div class="wallet-progress google">
+                                <div class="points-display google">3 referrals made</div>
+                                RM 150 earned total
+                            </div>
+                        </div>
+                        <div class="wallet-bottom google">
+                            <div class="wallet-barcode google"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-details">
+                    <h3><i class="fas fa-share-alt"></i> Referral Cards</h3>
+                    <p style="font-size: 1.1rem; margin-bottom: 2rem; opacity: 0.9;">
+                        Turn customers into brand ambassadors. Perfect for businesses that rely on word-of-mouth marketing.
+                    </p>
+
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> Track successful referrals</li>
+                        <li><i class="fas fa-check"></i> Reward both referrer and referee</li>
+                        <li><i class="fas fa-check"></i> Social sharing integration</li>
+                        <li><i class="fas fa-check"></i> Custom referral codes/links</li>
+                        <li><i class="fas fa-check"></i> Performance analytics</li>
+                    </ul>
+
+                    <div class="business-examples">
+                        <h4><i class="fas fa-store"></i> Perfect Malaysian Businesses</h4>
+                        <div class="example-grid">
+                            <div class="example-item">
+                                <i class="fas fa-graduation-cap"></i>
+                                <h5>Tuition Centers</h5>
+                                <p>Student referral rewards</p>
+                            </div>
+                            <div class="example-item">
+                                <i class="fas fa-cut"></i>
+                                <h5>Beauty Salons</h5>
+                                <p>Friend referral discounts</p>
+                            </div>
+                            <div class="example-item">
+                                <i class="fas fa-dumbbell"></i>
+                                <h5>Fitness Centers</h5>
+                                <p>Buddy membership deals</p>
+                            </div>
+                            <div class="example-item">
+                                <i class="fas fa-home"></i>
+                                <h5>Home Services</h5>
+                                <p>Neighbor referral programs</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tier-badge tier-multi">Available on Multi-Branch Plan (RM299)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Birthday Cards -->
+        <div class="card-section" id="birthday-section">
+            <div class="card-showcase">
+                <div class="card-visual">
+                    <div class="card-preview birthday-card">
+                        <div class="card-header">
+                            <div class="business-name">Cake House Delights</div>
+                            <div class="card-logo"><i class="fas fa-birthday-cake"></i></div>
+                        </div>
+                        <div class="card-title">Birthday Special</div>
+                        <div class="card-subtitle">Special treats all year</div>
+                        <div class="card-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 85%"></div>
+                            </div>
+                            <div class="progress-text">Birthday month: 25% off</div>
+                        </div>
+                    </div>
+
+                    <div class="wallet-preview birthday-card">
+                        <div class="wallet-header">
+                            <div class="wallet-provider">
+                                <i class="fas fa-wallet"></i>
+                                <span>Apple Wallet</span>
+                            </div>
+                            <span>•••</span>
+                        </div>
+                        <div class="wallet-logo-section">
+                            <div class="wallet-business-logo">
+                                <i class="fas fa-birthday-cake"></i>
+                            </div>
+                            <div class="wallet-nfc">
+                                <i class="fas fa-signal" style="transform: rotate(90deg);"></i>
+                            </div>
+                        </div>
+                        <div class="wallet-main-content">
+                            <div class="wallet-title">Birthday Special</div>
+                            <div class="wallet-business">Cake House Delights</div>
+                            <div class="wallet-progress">
+                                <div class="tier-indicator" style="color: #ff69b4;">
+                                    <i class="fas fa-birthday-cake"></i>
+                                    <span>Birthday Month!</span>
+                                </div>
+                                25% off all cakes & treats
+                            </div>
+                        </div>
+                        <div class="wallet-bottom">
+                            <div class="wallet-barcode"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-details">
+                    <h3><i class="fas fa-gift"></i> Birthday Cards</h3>
+                    <p style="font-size: 1.1rem; margin-bottom: 2rem; opacity: 0.9;">
+                        Celebrate customer birthdays with special rewards. Creates emotional connection and guaranteed annual visits.
+                    </p>
+
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> Automatic birthday detection</li>
+                        <li><i class="fas fa-check"></i> Special birthday month rewards</li>
+                        <li><i class="fas fa-check"></i> Personalized offers and messages</li>
+                        <li><i class="fas fa-check"></i> Annual customer re-engagement</li>
+                        <li><i class="fas fa-check"></i> Social media integration opportunities</li>
+                    </ul>
+
+                    <div class="business-examples">
+                        <h4><i class="fas fa-store"></i> Perfect Malaysian Businesses</h4>
+                        <div class="example-grid">
+                            <div class="example-item">
+                                <i class="fas fa-birthday-cake"></i>
+                                <h5>Bakeries</h5>
+                                <p>Free birthday cake slice</p>
+                            </div>
+                            <div class="example-item">
+                                <i class="fas fa-utensils"></i>
+                                <h5>Restaurants</h5>
+                                <p>Birthday meal discounts</p>
+                            </div>
+                            <div class="example-item">
+                                <i class="fas fa-cut"></i>
+                                <h5>Beauty Salons</h5>
+                                <p>Birthday makeover specials</p>
+                            </div>
+                            <div class="example-item">
+                                <i class="fas fa-shopping-bag"></i>
+                                <h5>Retail Stores</h5>
+                                <p>Birthday shopping vouchers</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tier-badge tier-basic">Available on Basic Plan (RM99)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Combo Cards -->
+        <div class="card-section" id="combo-section">
+            <div class="card-showcase">
+                <div class="card-visual">
+                    <div class="card-preview combo-card">
+                        <div class="card-header">
+                            <div class="business-name">Mega Mart Chain</div>
+                            <div class="card-logo"><i class="fas fa-star"></i></div>
+                        </div>
+                        <div class="card-title">Ultimate Rewards</div>
+                        <div class="card-subtitle">Points + Cashback + Tiers</div>
+                        <div class="card-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 55%"></div>
+                            </div>
+                            <div class="progress-text">Gold • 1,240 pts • RM 23.50</div>
+                        </div>
+                    </div>
+
+                    <div class="wallet-preview google">
+                        <div class="wallet-header google">
+                            <div class="wallet-provider">
+                                <i class="fab fa-google-pay"></i>
+                                <span>Google Wallet</span>
+                            </div>
+                        </div>
+                        <div class="wallet-logo-section google">
+                            <div class="wallet-business-logo google">
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                        <div class="wallet-main-content google">
+                            <div class="wallet-title google">Ultimate Rewards</div>
+                            <div class="wallet-business google">Mega Mart Chain</div>
+                            <div class="wallet-progress google">
+                                <div class="tier-indicator">
+                                    <i class="fas fa-crown" style="color: #ffd700;"></i>
+                                    <span>Gold • 1,240 pts</span>
+                                </div>
+                                RM 23.50 cashback available
+                            </div>
+                        </div>
+                        <div class="wallet-bottom google">
+                            <div class="wallet-barcode google"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-details">
+                    <h3><i class="fas fa-rocket"></i> Combo Cards</h3>
+                    <p style="font-size: 1.1rem; margin-bottom: 2rem; opacity: 0.9;">
+                        The ultimate loyalty experience combining multiple reward types. Maximum engagement for established businesses.
+                    </p>
+
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> Multiple reward systems in one card</li>
+                        <li><i class="fas fa-check"></i> Points + Cashback + Tier benefits</li>
+                        <li><i class="fas fa-check"></i> Complex engagement strategies</li>
+                        <li><i class="fas fa-check"></i> Highest customer lifetime value</li>
+                        <li><i class="fas fa-check"></i> Premium business positioning</li>
+                    </ul>
+
+                    <div class="business-examples">
+                        <h4><i class="fas fa-store"></i> Perfect Malaysian Businesses</h4>
+                        <div class="example-grid">
+                            <div class="example-item">
+                                <i class="fas fa-shopping-cart"></i>
+                                <h5>Supermarkets</h5>
+                                <p>Complete shopping rewards</p>
+                            </div>
+                            <div class="example-item">
+                                <i class="fas fa-gas-pump"></i>
+                                <h5>Petrol Stations</h5>
+                                <p>Multi-benefit fuel cards</p>
+                            </div>
+                            <div class="example-item">
+                                <i class="fas fa-hotel"></i>
+                                <h5>Hotels</h5>
+                                <p>Comprehensive stay rewards</p>
+                            </div>
+                            <div class="example-item">
+                                <i class="fas fa-building"></i>
+                                <h5>Department Stores</h5>
+                                <p>Premium shopping experience</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tier-badge tier-multi">Exclusive to Multi-Branch Plan (RM299)</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab Management
+        function showCard(cardType) {
+            // Hide all sections
+            document.querySelectorAll('.card-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Remove active from all nav tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(cardType + '-section').classList.add('active');
+            event.target.classList.add('active');
+            
+            // Smooth scroll to content
+            document.querySelector('.content').scrollIntoView({ 
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+
+        // Interactive card animations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add hover effects to card previews
+            document.querySelectorAll('.card-preview').forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'rotateY(10deg) rotateX(5deg) scale(1.05)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'rotateY(0deg) rotateX(0deg) scale(1)';
+                });
+            });
+            
+            // Animate progress bars on scroll
+            const observerOptions = {
+                threshold: 0.5,
+                rootMargin: '0px'
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const progressFills = entry.target.querySelectorAll('.progress-fill');
+                        progressFills.forEach(fill => {
+                            const width = fill.style.width;
+                            fill.style.width = '0%';
+                            setTimeout(() => {
+                                fill.style.width = width;
+                            }, 200);
+                        });
+                    }
+                });
+            }, observerOptions);
+            
+            document.querySelectorAll('.card-showcase').forEach(showcase => {
+                observer.observe(showcase);
+            });
+        });
+    </script>
+</body>
+</html>

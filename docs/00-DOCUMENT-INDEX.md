@@ -36,10 +36,17 @@ Technical implementation for small team:
    - Campaign-based system with optional wallet integration
    - Simple deployment strategy for 2-person team
 
+5. **[06-WALLET-IMPLEMENTATION-GUIDE.md](06-WALLET-IMPLEMENTATION-GUIDE.md)** - Wallet integration (OPTIONAL)
+   - **Complete Apple Wallet (PassKit) implementation** (NEW)
+   - **Complete Google Wallet implementation** (NEW)
+   - Backend services with jBoilerplate stack
+   - Certificate setup and configuration
+   - Production-ready code examples
+
 ### 🔐 **For Security & Compliance**
 Essential security and legal requirements:
 
-5. **[05-SECURITY-COMPLIANCE.md](05-SECURITY-COMPLIANCE.md)** - Security framework
+6. **[05-SECURITY-COMPLIANCE.md](05-SECURITY-COMPLIANCE.md)** - Security framework
    - Multi-tenant data protection
    - Malaysian PDPA compliance essentials
    - Basic security measures for small team
@@ -98,7 +105,9 @@ Essential security and legal requirements:
 | 03-USER-FLOWS.md | ✅ **Updated Jan 2025** | Web-first user journeys with OTP auth |
 | 04-TECHNICAL-GUIDE.md | ✅ **Updated Jan 2025** | Includes customer portal authentication |
 | 05-SECURITY-COMPLIANCE.md | ✅ **Current** | Essential security measures |
+| 06-WALLET-IMPLEMENTATION-GUIDE.md | 🆕 **New Jan 2025** | Apple & Google Wallet integration |
 | CHANGELOG-WEB-PORTAL-UPDATE.md | 🆕 **New Jan 2025** | Complete update documentation |
+| README-WEB-PORTAL-UPDATE.md | 🆕 **New Jan 2025** | Quick start guide for updates |
 
 ---
 

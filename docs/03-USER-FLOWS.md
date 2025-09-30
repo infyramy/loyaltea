@@ -319,7 +319,7 @@ Customer Profile (Multiple Cards):
 ```
 Customer scans QR code at store counter
 ↓
-QR redirects to: app.loyaltea.my/kedaiA/customer
+QR redirects to: app.loyaltea.my/kedaiA/join
 ↓
 Branded Landing Page:
 ┌─────────────────────────────────────────────────────────┐
@@ -330,7 +330,7 @@ Branded Landing Page:
 │ ☕ Join Our VIP Coffee Card                            │
 │ Collect 10 stamps, get 1 FREE premium coffee!         │
 │                                                         │
-│ 💳 Added directly to your phone wallet                 │
+│ ✅ Access via web or phone wallet                      │
 │ 📱 No app download needed                              │
 │ ⚡ Quick 30-second signup                              │
 │                                                         │
@@ -366,46 +366,37 @@ Registration Form:
 │ 📱 Takes 30 seconds, works immediately                 │
 └─────────────────────────────────────────────────────────┘
 
-↓ (Registration processing)
+↓ (Registration processing - redirects to customer dashboard)
 
-Card Generation Success:
-┌─────────────────────────────────────────────────────────┐
-│ ✨ Your VIP Coffee Card is Ready! ✨                   │
-│                                                         │
-│ [Card Preview showing branded wallet card design]      │
-│                                                         │
-│ 📲 Add to your phone wallet:                          │
-│                                                         │
-│ iPhone Users:                                           │
-│ [📱 Add to Apple Wallet] ← Tap to add instantly       │
-│                                                         │
-│ Android Users:                                          │
-│ [📱 Add to Google Wallet] ← Tap to add instantly      │
-│                                                         │
-│ 🔄 Can't add to wallet right now?                     │
-│ [📋 View Web Version] ← Use this temporarily          │
-│                                                         │
-│ [📧 Email Card Link] [💬 WhatsApp Card Link]          │
-└─────────────────────────────────────────────────────────┘
-
-↓ (Wallet add successful)
-
-Welcome Message:
+Customer Dashboard (Web Portal):
 ┌─────────────────────────────────────────────────────────┐
 │ 🎉 Welcome to Kedai Kopi Ah Beng VIP! 🎉              │
 │                                                         │
-│ ✅ Your card is now in your wallet                     │
-│ ✅ Ready to start earning stamps                        │
+│ ✨ Your VIP Coffee Card is Ready! ✨                   │
 │                                                         │
-│ How it works:                                           │
-│ 1️⃣ Show your wallet card when ordering                │
-│ 2️⃣ Staff scans your card QR code                      │
-│ 3️⃣ Get stamps automatically added                     │
-│ 4️⃣ Enjoy FREE premium coffee after 10 stamps!        │
+│ ☕ Your VIP Coffee Card                                │
+│ [QR Code Display - For Staff Scanning]                 │
+│ ⭐☆☆☆☆☆☆☆☆☆                                      │
+│ 0 of 10 stamps collected                               │
+│ 🎯 Collect 10 stamps for FREE COFFEE!                 │
 │                                                         │
-│ 🏪 Visit us again soon!                               │
-│ 📍 Semenyih, Selangor                                 │
-│ 📞 WhatsApp: 019-123-4567                             │
+│ 📊 Your Progress:                                      │
+│ • Member since: Today                                  │
+│ • Total visits: 0                                      │
+│ • Stamps earned: 0                                     │
+│ • Rewards earned: 0                                    │
+│                                                         │
+│ 💡 How it works:                                       │
+│ 1️⃣ Show this QR code when ordering                    │
+│ 2️⃣ Staff scans your QR code                           │
+│ 3️⃣ Stamps automatically added                          │
+│ 4️⃣ Free coffee after 10 stamps!                       │
+│                                                         │
+│ 📱 Optional: Add to Phone Wallet                       │
+│ [Add to Apple Wallet] [Add to Google Wallet]          │
+│ Access your card without internet connection           │
+│                                                         │
+│ [View Full History] [Profile Settings] [Logout]        │
 └─────────────────────────────────────────────────────────┘
 ```
 
@@ -427,7 +418,7 @@ Login Form:
 │ Don't have account? [Register Now]                     │
 └─────────────────────────────────────────────────────────┘
 
-↓ (OTP sent)
+↓ (OTP sent via SMS)
 
 OTP Verification:
 ┌─────────────────────────────────────────────────────────┐
@@ -442,14 +433,15 @@ OTP Verification:
 │ Code expires in: 4:52                                  │
 └─────────────────────────────────────────────────────────┘
 
-↓ (OTP verified)
+↓ (OTP verified - creates session)
 
-Customer Dashboard (Web Version):
+Customer Dashboard (Web Portal):
 ┌─────────────────────────────────────────────────────────┐
 │ 👋 Welcome back, Aminah!                               │
 │ 🏪 Kedai Kopi Ah Beng                                 │
 │                                                         │
 │ ☕ Your VIP Coffee Card                                │
+│ [QR Code Display - Tap to Enlarge]                     │
 │ ⭐⭐⭐⭐⭐⭐⭐⭐☆☆                              │
 │ 8 of 10 stamps collected                               │
 │ 🎯 Just 2 more stamps for FREE COFFEE! 🎉             │
@@ -460,15 +452,71 @@ Customer Dashboard (Web Version):
 │ • Stamps earned: 38                                    │
 │ • Free coffees enjoyed: 3                             │
 │                                                         │
-│ 🕐 Recent Visits:                                      │
+│ 🕐 Recent Activity:                                    │
 │ • +1 stamp - Today, 9:30 AM                           │
 │ • +1 stamp - 2 days ago                               │
 │ • FREE COFFEE claimed - 1 week ago                     │
 │                                                         │
-│ [📱 Add to Wallet Again] [View All History]           │
+│ 📱 Optional: Save to Phone Wallet                      │
+│ [Add to Apple Wallet] [Add to Google Wallet]          │
+│ Access your card offline anytime                       │
 │                                                         │
-│ Lost your wallet card? [Re-download Here]              │
+│ [View Full History] [Profile Settings] [Logout]        │
 └─────────────────────────────────────────────────────────┘
+```
+
+### Multi-Campaign Customer Experience
+```
+For customers with multiple loyalty cards from same business:
+
+Customer Dashboard (Multiple Cards):
+┌─────────────────────────────────────────────────────────┐
+│ 👋 Hi Ahmad! - Kedai Kopi Ah Beng                     │
+│                                                         │
+│ Your Loyalty Cards (3):                                 │
+│                                                         │
+│ ☕ VIP Coffee Card                                     │
+│ ⭐⭐⭐⭐⭐⭐⭐☆☆☆ (7/10 stamps)               │
+│ [Show QR] [Details]                                    │
+│                                                         │
+│ 👑 Gold Membership                                     │
+│ Gold Tier - 15% Discount                               │
+│ [Show QR] [Details]                                    │
+│                                                         │
+│ 🎫 CNY Special Campaign                                │
+│ 2 coupons available - Expires Feb 28                   │
+│ [Show QR] [Details]                                    │
+│                                                         │
+│ 📱 Add All Cards to Wallet                             │
+│ [Add to Apple Wallet] [Add to Google Wallet]          │
+│                                                         │
+│ [Profile Settings] [Logout]                            │
+└─────────────────────────────────────────────────────────┘
+```
+
+### Web Portal Features
+
+**Customer Can Access:**
+1. **Digital QR Code**: Always available for staff scanning
+2. **Live Balance**: Real-time stamps/points/rewards status
+3. **Transaction History**: Complete activity log
+4. **Profile Management**: Update phone, email, birthday
+5. **Wallet Integration**: Optional download to Apple/Google Wallet
+6. **Multi-Business Cards**: View all loyalty programs from one login
+7. **Notifications**: Special offers, birthday rewards, campaign updates
+
+**Authentication & Sessions:**
+- OTP-based login (SMS verification)
+- Session persists for 30 days
+- Auto-login on return visits (if session active)
+- Secure logout option
+- Multi-device access (phone, tablet, desktop)
+
+**QR Code Display:**
+- Large, scannable QR code front and center
+- Tap to fullscreen for easy staff scanning
+- Works with or without internet (cached after first load)
+- Same QR code works for wallet and web portal
 ```
 
 ---
@@ -531,6 +579,57 @@ Business Management:
 │                                                         │
 │ [+ Add New Business] [Export Report] [Send Broadcast]  │
 └─────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 🌐 Customer Access Methods
+
+### Three Ways to Access Loyalty Card
+
+**1. Web Portal (Primary Method)** ✅ Recommended
+```
+• Access via: app.loyaltea.my/login
+• Login with phone number + OTP
+• View QR code, balance, history
+• Works on any device with browser
+• Session persists for 30 days
+• No installation required
+```
+
+**2. Apple Wallet (Optional)**
+```
+• Download from web portal
+• One-time setup, always accessible
+• Works offline
+• Automatic updates when staff scans
+• Lock screen access
+• Location-based notifications
+```
+
+**3. Google Wallet (Optional)**
+```
+• Download from web portal
+• One-time setup, always accessible
+• Works offline
+• Real-time balance updates
+• Quick access from home screen
+• Location-based reminders
+```
+
+### Universal Customer Journey
+```
+Customer Registration:
+1. Scan QR at store → Register → Web portal access
+2. Optional: Download to Apple/Google Wallet
+3. Show QR (web or wallet) when visiting store
+4. Staff scans → Balance updates everywhere
+
+Returning Customer:
+1. Open web portal (or wallet if downloaded)
+2. Show QR code to staff
+3. Staff scans → Updates reflected immediately
+4. View updated balance in web portal or wallet
 ```
 
 ---

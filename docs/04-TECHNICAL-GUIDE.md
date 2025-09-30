@@ -202,31 +202,563 @@ const dashboardRoutes = [
 // App routes (app.loyaltea.my)
 const appRoutes = [
   {
+    // Customer login - universal entry point
     path: '/login',
+    component: () => import('@/views/customer/Login.vue')
+  },
+  {
+    // Customer dashboard - requires authentication
+    path: '/dashboard',
+    component: () => import('@/views/customer/Dashboard.vue'),
+    meta: { requiresAuth: true, role: 'customer' }
+  },
+  {
+    // Customer profile management
+    path: '/profile',
+    component: () => import('@/views/customer/Profile.vue'),
+    meta: { requiresAuth: true, role: 'customer' }
+  },
+  {
+    // Multi-business view for customers
+    path: '/cards',
+    component: () => import('@/views/customer/AllCards.vue'),
+    meta: { requiresAuth: true, role: 'customer' }
+  },
+  {
+    // Staff login
+    path: '/staff/login',
     component: () => import('@/views/staff/Login.vue')
   },
   {
+    // Staff scanner
     path: '/staff/scanner',
     component: () => import('@/views/staff/Scanner.vue'),
     meta: { requiresAuth: true, role: 'staff' }
   },
   {
-    // Dynamic tenant routes
+    // Dynamic tenant routes (for joining/registration)
     path: '/:tenant(\\w+)',
     component: () => import('@/views/customer/TenantWrapper.vue'),
     children: [
-      { path: 'customer', component: () => import('@/views/customer/Landing.vue') },
-      { path: 'register', component: () => import('@/views/customer/Register.vue') },
-      { path: 'login', component: () => import('@/views/customer/Login.vue') },
-      { path: 'dashboard', component: () => import('@/views/customer/Dashboard.vue') }
+      { path: 'join', component: () => import('@/views/customer/Landing.vue') },
+      { path: 'register', component: () => import('@/views/customer/Register.vue') }
     ]
-  },
-  {
-    // Query parameter fallback
-    path: '/customer',
-    component: () => import('@/views/customer/Landing.vue')
   }
 ];
+```
+
+---
+
+## 🔐 Customer Web Portal Authentication
+
+### OTP-Based Authentication System
+```javascript
+class CustomerAuthService {
+  constructor() {
+    this.otpStore = new Map(); // In production, use Redis
+    this.sessionStore = new Map(); // In production, use Redis with TTL
+  }
+
+  // Step 1: Generate and send OTP
+  async sendOTP(phoneNumber) {
+    // Validate Malaysian phone format
+    if (!this.isValidMalaysianPhone(phoneNumber)) {
+      throw new Error('Invalid phone number format');
+    }
+
+    // Generate 6-digit OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiresAt = Date.now() + (5 * 60 * 1000); // 5 minutes
+
+    // Store OTP temporarily
+    this.otpStore.set(phoneNumber, {
+      code: otp,
+      expiresAt,
+      attempts: 0
+    });
+
+    // Send via SMS provider
+    await this.sendSMS(phoneNumber, `Your LoyalTea verification code is: ${otp}. Valid for 5 minutes.`);
+
+    return { success: true, expiresIn: 300 };
+  }
+
+  // Step 2: Verify OTP and create session
+  async verifyOTP(phoneNumber, otpCode) {
+    const stored = this.otpStore.get(phoneNumber);
+
+    if (!stored) {
+      throw new Error('OTP not found or expired');
+    }
+
+    // Check expiration
+    if (Date.now() > stored.expiresAt) {
+      this.otpStore.delete(phoneNumber);
+      throw new Error('OTP expired');
+    }
+
+    // Check attempts (prevent brute force)
+    if (stored.attempts >= 3) {
+      this.otpStore.delete(phoneNumber);
+      throw new Error('Too many failed attempts');
+    }
+
+    // Verify OTP
+    if (stored.code !== otpCode) {
+      stored.attempts++;
+      throw new Error('Invalid OTP');
+    }
+
+    // OTP valid - clean up and get/create user
+    this.otpStore.delete(phoneNumber);
+    const user = await this.getUserByPhone(phoneNumber);
+
+    if (!user) {
+      throw new Error('User not found. Please register first.');
+    }
+
+    // Create session
+    const session = await this.createSession(user);
+
+    return {
+      success: true,
+      user: {
+        id: user.id,
+        phone: user.phone,
+        name: user.full_name,
+        email: user.email
+      },
+      token: session.token,
+      expiresAt: session.expiresAt
+    };
+  }
+
+  // Create secure session
+  async createSession(user) {
+    const sessionId = this.generateSecureToken();
+    const expiresAt = Date.now() + (30 * 24 * 60 * 60 * 1000); // 30 days
+
+    const session = {
+      sessionId,
+      userId: user.id,
+      phone: user.phone,
+      role: 'customer',
+      createdAt: Date.now(),
+      expiresAt,
+      lastActivity: Date.now()
+    };
+
+    // Store session in Redis
+    await redis.setex(
+      `session:${sessionId}`,
+      30 * 24 * 60 * 60, // 30 days in seconds
+      JSON.stringify(session)
+    );
+
+    // Also store user sessions list for multi-device management
+    await redis.sadd(`user:${user.id}:sessions`, sessionId);
+
+    return {
+      token: sessionId,
+      expiresAt
+    };
+  }
+
+  // Validate session middleware
+  async validateSession(req, res, next) {
+    const token = req.headers.authorization?.replace('Bearer ', '') || req.cookies.session_token;
+
+    if (!token) {
+      return res.status(401).json({ error: 'No session token provided' });
+    }
+
+    // Get session from Redis
+    const sessionData = await redis.get(`session:${token}`);
+
+    if (!sessionData) {
+      return res.status(401).json({ error: 'Invalid or expired session' });
+    }
+
+    const session = JSON.parse(sessionData);
+
+    // Check if expired
+    if (Date.now() > session.expiresAt) {
+      await this.destroySession(token);
+      return res.status(401).json({ error: 'Session expired' });
+    }
+
+    // Update last activity
+    session.lastActivity = Date.now();
+    await redis.setex(`session:${token}`, 30 * 24 * 60 * 60, JSON.stringify(session));
+
+    // Attach user to request
+    req.user = {
+      id: session.userId,
+      phone: session.phone,
+      role: session.role
+    };
+
+    next();
+  }
+
+  // Logout - destroy session
+  async logout(sessionToken) {
+    const sessionData = await redis.get(`session:${sessionToken}`);
+
+    if (sessionData) {
+      const session = JSON.parse(sessionData);
+
+      // Remove from user's sessions list
+      await redis.srem(`user:${session.userId}:sessions`, sessionToken);
+
+      // Delete session
+      await redis.del(`session:${sessionToken}`);
+    }
+
+    return { success: true };
+  }
+
+  // Utility functions
+  isValidMalaysianPhone(phone) {
+    // Malaysian phone: 01X-XXXX-XXXX or 01XXXXXXXX
+    const regex = /^(01[0-9])[0-9]{7,8}$/;
+    return regex.test(phone.replace(/[-\s]/g, ''));
+  }
+
+  generateSecureToken() {
+    const crypto = require('crypto');
+    return crypto.randomBytes(32).toString('hex');
+  }
+
+  async getUserByPhone(phone) {
+    const result = await db.query(
+      'SELECT * FROM users WHERE phone = $1 AND role = $2',
+      [phone, 'customer']
+    );
+    return result.rows[0] || null;
+  }
+
+  async sendSMS(phone, message) {
+    // Integration with Malaysian SMS provider
+    // Example: local SMS gateway, Twilio, etc.
+    console.log(`SMS to ${phone}: ${message}`);
+    return true;
+  }
+}
+```
+
+### Customer Registration Flow
+```javascript
+class CustomerRegistrationService {
+  async registerCustomer(registrationData, campaignId) {
+    const { phone, fullName, email, birthday, tenantId } = registrationData;
+
+    // Check if customer already exists
+    const existingUser = await db.query(
+      'SELECT id FROM users WHERE phone = $1',
+      [phone]
+    );
+
+    let customerId;
+
+    if (existingUser.rows.length > 0) {
+      // Customer exists, just add to this campaign
+      customerId = existingUser.rows[0].id;
+    } else {
+      // Create new customer
+      const newUser = await db.query(`
+        INSERT INTO users (phone, full_name, email, date_of_birth, role)
+        VALUES ($1, $2, $3, $4, 'customer')
+        RETURNING id
+      `, [phone, fullName, email, birthday]);
+
+      customerId = newUser.rows[0].id;
+    }
+
+    // Check if already enrolled in this campaign
+    const existingLoyalty = await db.query(
+      'SELECT id FROM customer_loyalties WHERE customer_id = $1 AND campaign_id = $2',
+      [customerId, campaignId]
+    );
+
+    if (existingLoyalty.rows.length > 0) {
+      throw new Error('Already enrolled in this campaign');
+    }
+
+    // Create loyalty card for this campaign
+    const qrData = this.generateCustomerQR(customerId, campaignId, tenantId);
+
+    const loyalty = await db.query(`
+      INSERT INTO customer_loyalties (
+        customer_id, campaign_id, tenant_id,
+        progress_data, qr_signature, status
+      )
+      VALUES ($1, $2, $3, $4, $5, 'active')
+      RETURNING id
+    `, [
+      customerId,
+      campaignId,
+      tenantId,
+      JSON.stringify({ stamps: 0, points: 0 }),
+      qrData.signature
+    ]);
+
+    return {
+      customerId,
+      loyaltyId: loyalty.rows[0].id,
+      qrCode: qrData.qrCode
+    };
+  }
+
+  generateCustomerQR(customerId, campaignId, tenantId) {
+    const timestamp = Date.now();
+    const data = `${customerId}|${campaignId}|${tenantId}|${timestamp}`;
+
+    const crypto = require('crypto');
+    const hmac = crypto.createHmac('sha256', process.env.QR_SECRET_KEY);
+    hmac.update(data);
+    const signature = hmac.digest('hex');
+
+    return {
+      qrCode: `loyaltea://scan?d=${Buffer.from(data).toString('base64')}&s=${signature}`,
+      signature
+    };
+  }
+}
+```
+
+### Session Management in Frontend
+```javascript
+// Vue 3 Pinia Store for customer authentication
+import { defineStore } from 'pinia'
+import { ref, computed } from 'vue'
+
+export const useCustomerAuthStore = defineStore('customerAuth', () => {
+  const user = ref(null)
+  const token = ref(localStorage.getItem('session_token'))
+  const isAuthenticated = computed(() => !!user.value && !!token.value)
+
+  // Send OTP
+  async function sendOTP(phoneNumber) {
+    const response = await fetch('/api/customer/auth/send-otp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phone: phoneNumber })
+    })
+
+    if (!response.ok) {
+      throw new Error('Failed to send OTP')
+    }
+
+    return await response.json()
+  }
+
+  // Verify OTP and login
+  async function verifyOTP(phoneNumber, otpCode) {
+    const response = await fetch('/api/customer/auth/verify-otp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phone: phoneNumber, otp: otpCode })
+    })
+
+    if (!response.ok) {
+      throw new Error('Invalid OTP')
+    }
+
+    const data = await response.json()
+
+    // Store session
+    token.value = data.token
+    user.value = data.user
+    localStorage.setItem('session_token', data.token)
+    localStorage.setItem('user_data', JSON.stringify(data.user))
+
+    return data
+  }
+
+  // Restore session from localStorage
+  function restoreSession() {
+    const savedToken = localStorage.getItem('session_token')
+    const savedUser = localStorage.getItem('user_data')
+
+    if (savedToken && savedUser) {
+      token.value = savedToken
+      user.value = JSON.parse(savedUser)
+      return true
+    }
+
+    return false
+  }
+
+  // Logout
+  async function logout() {
+    if (token.value) {
+      await fetch('/api/customer/auth/logout', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token.value}` }
+      })
+    }
+
+    user.value = null
+    token.value = null
+    localStorage.removeItem('session_token')
+    localStorage.removeItem('user_data')
+  }
+
+  // Get auth header
+  function getAuthHeader() {
+    return token.value ? { 'Authorization': `Bearer ${token.value}` } : {}
+  }
+
+  return {
+    user,
+    token,
+    isAuthenticated,
+    sendOTP,
+    verifyOTP,
+    restoreSession,
+    logout,
+    getAuthHeader
+  }
+})
+```
+
+### API Endpoints for Customer Portal
+```javascript
+// Express routes for customer authentication and portal
+const express = require('express');
+const router = express.Router();
+const customerAuth = new CustomerAuthService();
+const customerReg = new CustomerRegistrationService();
+
+// Send OTP
+router.post('/auth/send-otp', async (req, res) => {
+  try {
+    const { phone } = req.body;
+    const result = await customerAuth.sendOTP(phone);
+    res.json(result);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+// Verify OTP and login
+router.post('/auth/verify-otp', async (req, res) => {
+  try {
+    const { phone, otp } = req.body;
+    const result = await customerAuth.verifyOTP(phone, otp);
+    res.json(result);
+  } catch (error) {
+    res.status(401).json({ error: error.message });
+  }
+});
+
+// Logout
+router.post('/auth/logout', async (req, res) => {
+  try {
+    const token = req.headers.authorization?.replace('Bearer ', '');
+    await customerAuth.logout(token);
+    res.json({ success: true });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+// Get customer dashboard data (requires auth)
+router.get('/dashboard', customerAuth.validateSession, async (req, res) => {
+  try {
+    const customerId = req.user.id;
+
+    // Get all loyalty cards for this customer
+    const loyalties = await db.query(`
+      SELECT
+        cl.*,
+        c.name as campaign_name,
+        c.card_type,
+        c.card_config,
+        t.business_name,
+        t.slug as tenant_slug,
+        t.branding
+      FROM customer_loyalties cl
+      JOIN campaigns c ON cl.campaign_id = c.id
+      JOIN tenants t ON cl.tenant_id = t.id
+      WHERE cl.customer_id = $1 AND cl.status = 'active'
+      ORDER BY cl.updated_at DESC
+    `, [customerId]);
+
+    res.json({ loyalties: loyalties.rows });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Get specific loyalty card details
+router.get('/card/:loyaltyId', customerAuth.validateSession, async (req, res) => {
+  try {
+    const { loyaltyId } = req.params;
+    const customerId = req.user.id;
+
+    const loyalty = await db.query(`
+      SELECT
+        cl.*,
+        c.name as campaign_name,
+        c.card_type,
+        c.card_config,
+        t.business_name,
+        t.branding
+      FROM customer_loyalties cl
+      JOIN campaigns c ON cl.campaign_id = c.id
+      JOIN tenants t ON cl.tenant_id = t.id
+      WHERE cl.id = $1 AND cl.customer_id = $2
+    `, [loyaltyId, customerId]);
+
+    if (loyalty.rows.length === 0) {
+      return res.status(404).json({ error: 'Card not found' });
+    }
+
+    // Get transaction history
+    const transactions = await db.query(`
+      SELECT * FROM transactions
+      WHERE customer_loyalty_id = $1
+      ORDER BY created_at DESC
+      LIMIT 50
+    `, [loyaltyId]);
+
+    res.json({
+      loyalty: loyalty.rows[0],
+      transactions: transactions.rows
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Customer registration
+router.post('/register', async (req, res) => {
+  try {
+    const { phone, fullName, email, birthday, tenantSlug, campaignId } = req.body;
+
+    // Get tenant
+    const tenant = await db.query('SELECT id FROM tenants WHERE slug = $1', [tenantSlug]);
+    if (tenant.rows.length === 0) {
+      return res.status(404).json({ error: 'Business not found' });
+    }
+
+    const result = await customerReg.registerCustomer({
+      phone,
+      fullName,
+      email,
+      birthday,
+      tenantId: tenant.rows[0].id
+    }, campaignId);
+
+    res.json(result);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+module.exports = router;
 ```
 
 ---
@@ -412,9 +944,16 @@ class TransactionService {
 
 ---
 
-## 📱 Wallet Integration (Infyra Infrastructure)
+## 📱 Wallet Integration (Optional Feature)
 
-### Centralized Pass Generation
+### Overview - Wallet as Enhancement, Not Requirement
+
+**Primary Access**: Web portal (app.loyaltea.my/login)
+**Optional Enhancement**: Apple Wallet / Google Wallet download
+
+The wallet integration provides an optional offline experience for customers who want quick access to their loyalty cards. However, **all core functionality works perfectly through the web portal alone**.
+
+### Wallet Pass Generation (On-Demand)
 ```javascript
 class WalletService {
   constructor() {
@@ -431,35 +970,44 @@ class WalletService {
     };
   }
   
-  async generateWalletPass(customerId, campaignId) {
+  // Customer requests wallet pass (optional download)
+  async generateWalletPass(customerId, loyaltyId) {
     const customer = await this.getCustomer(customerId);
-    const campaign = await this.getCampaign(campaignId);
+    const loyalty = await this.getCustomerLoyalty(loyaltyId);
+    const campaign = await this.getCampaign(loyalty.campaign_id);
     const tenant = await this.getTenant(campaign.tenant_id);
-    const loyalty = await this.getCustomerLoyalty(customerId, campaignId);
-    
+
+    // Check if pass already exists
+    if (loyalty.wallet_pass_id) {
+      return {
+        applePassUrl: `/api/wallet/apple/${loyalty.wallet_pass_id}.pkpass`,
+        googlePassUrl: `/api/wallet/google/${loyalty.wallet_pass_id}`
+      };
+    }
+
     // Generate Apple Wallet pass
     const applePass = await this.generateApplePass({
       customer,
-      campaign, 
+      campaign,
       tenant,
       loyalty
     });
-    
-    // Generate Google Wallet pass  
+
+    // Generate Google Wallet pass
     const googlePass = await this.generateGooglePass({
       customer,
       campaign,
       tenant,
       loyalty
     });
-    
-    // Store pass IDs
+
+    // Store pass IDs (optional - only if customer downloads)
     await db.query(`
-      UPDATE customer_loyalties 
+      UPDATE customer_loyalties
       SET wallet_pass_id = $2
       WHERE id = $1
     `, [loyalty.id, applePass.serialNumber]);
-    
+
     return {
       applePassUrl: applePass.url,
       googlePassUrl: googlePass.url

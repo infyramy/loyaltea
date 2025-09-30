@@ -19,8 +19,11 @@ Complete user journeys and specifications:
    - Universal QR code system and wallet integration
 
 3. **[03-USER-FLOWS.md](03-USER-FLOWS.md)** - Complete user journeys
+   - **Web portal primary customer experience** (NEW)
+   - OTP-based customer authentication and login
    - Multi-tenant customer flows with branded experiences
    - Campaign-based workflows for all user roles
+   - Optional wallet integration (Apple/Google Wallet)
    - Simple domain structure (dashboard.loyaltea.my + app.loyaltea.my)
 
 ### 🛠️ **For Development**
@@ -28,7 +31,9 @@ Technical implementation for small team:
 
 4. **[04-TECHNICAL-GUIDE.md](04-TECHNICAL-GUIDE.md)** - Development implementation
    - Multi-tenant database architecture
-   - Campaign-based system with Infyra wallet integration
+   - **Customer web portal authentication (OTP-based)** (NEW)
+   - **Session management with Redis** (NEW)
+   - Campaign-based system with optional wallet integration
    - Simple deployment strategy for 2-person team
 
 ### 🔐 **For Security & Compliance**
@@ -67,11 +72,12 @@ Essential security and legal requirements:
 ## 🎯 Team Focus Areas
 
 ### **What We're Building (Realistic Scope)**
-✅ **Multi-tenant SaaS**: Multiple businesses on 2 simple domains  
-✅ **Campaign system**: Multiple loyalty cards per business  
-✅ **3-tier pricing**: Basic (RM99) → Business (RM199) → Multi-Branch (RM299)  
-✅ **Malaysian focus**: Local payment methods and compliance  
-✅ **Apple/Google Wallet**: True wallet integration via Infyra
+✅ **Multi-tenant SaaS**: Multiple businesses on 2 simple domains
+✅ **Campaign system**: Multiple loyalty cards per business
+✅ **Web portal primary**: Customer login and dashboard (OTP-based)
+✅ **Optional wallet**: Apple/Google Wallet integration
+✅ **3-tier pricing**: Basic (RM99) → Business (RM199) → Multi-Branch (RM299)
+✅ **Malaysian focus**: Local payment methods and compliance
 
 ### **What We're NOT Building (Out of Scope)**
 ❌ **White-label solutions**: Too complex for 2-person team  
@@ -88,10 +94,11 @@ Essential security and legal requirements:
 | Document | Status | Purpose |
 |----------|--------|---------|
 | 01-BUSINESS-OVERVIEW.md | ✅ **Current** | Business strategy for Malaysian SMEs |
-| 02-LOYALTY-CARD-SPECIFICATIONS.md | ✅ **Updated** | Card types with Malaysian examples |
-| 03-USER-FLOWS.md | ✅ **Current** | Simple user journeys |
-| 04-TECHNICAL-GUIDE.md | ✅ **Current** | Practical development guide |
-| 05-SECURITY-COMPLIANCE.md | ✅ **Updated** | Essential security measures |
+| 02-LOYALTY-CARD-SPECIFICATIONS.md | ✅ **Updated Jan 2025** | Card types with web portal access |
+| 03-USER-FLOWS.md | ✅ **Updated Jan 2025** | Web-first user journeys with OTP auth |
+| 04-TECHNICAL-GUIDE.md | ✅ **Updated Jan 2025** | Includes customer portal authentication |
+| 05-SECURITY-COMPLIANCE.md | ✅ **Current** | Essential security measures |
+| CHANGELOG-WEB-PORTAL-UPDATE.md | 🆕 **New Jan 2025** | Complete update documentation |
 
 ---
 
@@ -101,13 +108,17 @@ Essential security and legal requirements:
 1. Multi-tenant database with campaign support
 2. Basic domain routing (dashboard + app domains)
 3. Simple campaign creation and management
-4. Customer registration with wallet integration
+4. **Customer web portal with OTP authentication** (UPDATED)
+5. **Customer registration and login system** (NEW)
+6. **Session management with Redis** (NEW)
 
-### **Phase 2: User Interfaces (Months 3-4)**  
+### **Phase 2: User Interfaces (Months 3-4)**
 1. Owner dashboard with campaign management
-2. Customer landing pages with tenant branding
-3. Staff QR scanner interface
-4. Basic card editor
+2. **Customer dashboard with QR code display** (UPDATED)
+3. **Customer transaction history and profile** (NEW)
+4. Staff QR scanner interface
+5. Basic card editor
+6. **Optional: Wallet download functionality** (NEW)
 
 ### **Phase 3: Malaysian Features (Months 5-6)**
 1. Local payment methods (FPX, bank transfer)

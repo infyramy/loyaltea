@@ -387,30 +387,46 @@ QR Code Contains:
 
 ---
 
-## 📱 Wallet Integration Specifications
+## 📱 Customer Access & Wallet Integration
 
-### Apple Wallet Pass Structure
-**All card types generate .pkpass files with:**
+### Primary Access: Web Portal ✅
+**All card types accessible via web browser:**
+- Login via OTP (SMS verification)
+- View QR code for staff scanning
+- Real-time balance updates
+- Transaction history
+- Profile management
+- Works on any device
+- No installation required
+
+### Optional: Wallet Integration
+**Customers can optionally download to Apple/Google Wallet:**
+
+#### Apple Wallet Pass Structure
+**All card types can generate .pkpass files with:**
 - Business branding (logo, colors)
 - Card type-specific display fields
 - QR code for scanning
 - Real-time balance updates
 - Location-based notifications (optional)
+- Offline access
 
-### Google Wallet Pass Structure  
-**All card types create Google Pay loyalty objects with:**
+#### Google Wallet Pass Structure
+**All card types can create Google Pay loyalty objects with:**
 - Business branding
 - Card type-specific layouts
 - QR/barcode for scanning
 - Automatic balance synchronization
 - Push notification updates
+- Quick home screen access
 
-### Universal Pass Updates
+### Universal Updates (Web + Wallet)
 **When staff processes transaction:**
 1. Database updates instantly
-2. Push notification sent to customer's device
-3. Wallet pass refreshes automatically
-4. Customer sees new balance/status immediately
+2. Web portal reflects new balance immediately
+3. If wallet pass exists: Push notification sent to device
+4. Wallet pass refreshes automatically
+5. Customer sees new balance in both web and wallet
 
 ---
 
